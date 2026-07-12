@@ -386,7 +386,7 @@ function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
               </span>
-              University Research Project
+              HANDS ON LEARNING ON IOT
             </span>
           </Reveal>
           <Reveal delay={0.1}>
@@ -419,7 +419,7 @@ function Hero() {
                 }
               >
                 <Play className="h-4 w-4" />
-                Watch Demo
+                Go to Demo
               </MagneticButton>
             </div>
           </Reveal>
@@ -680,9 +680,9 @@ function WhatIsIoTrack() {
             </Reveal>
             <Reveal delay={0.2}>
               <p className="mt-5 text-lg text-muted-foreground">
-                IoTrack combines a color-sensing robotic arm with a companion learning website to
-                help students see abstract IoT concepts come alive — from sensor readings to
-                physical actuation.
+                IoTrack combines a 4DOF (Four Degrees of Freedom) robotic arm with a companion
+                learning website to help students see abstract IoT concepts come alive—from sensor
+                readings to physical actuation.
               </p>
             </Reveal>
 
@@ -857,7 +857,7 @@ const COMPONENTS = [
   {
     name: "Breadboard",
     icon: CircuitBoard,
-    desc: "Solderless prototyping platform.",
+    desc: "Solderless prototyping platform or expansion board.",
     func: "Hosts the wiring between the ESP32, sensor and power rails.",
   },
   {
@@ -867,7 +867,7 @@ const COMPONENTS = [
     func: "Route signals and power between the components.",
   },
   {
-    name: "Robot Arm Frame",
+    name: "4DOF Robot Arm Frame",
     icon: Bot,
     desc: "Rigid mechanical chassis with articulated joints.",
     func: "Provides the structure the servos and gripper attach to.",
@@ -929,7 +929,7 @@ function ComponentsSection() {
 const ARM_STEPS = [
   {
     t: "Initialize System",
-    d: "ESP32 boots and calibrates every servo to its home position.",
+    d: "Microcontroller boots and calibrates every servo to its 90-degree home position.",
     icon: Zap,
   },
   { t: "Detect Block", d: "The arm scans the pickup zone for a new block.", icon: Radar },
@@ -945,11 +945,19 @@ const ARM_STEPS = [
     d: "The gripper closes and lifts the block from the pickup area.",
     icon: Hand,
   },
-  { t: "Rotate Arm", d: "The base rotates toward the designated color area.", icon: RotateCw },
-  { t: "Move to Correct Area", d: "The arm extends to the correct drop zone.", icon: MapPin },
+  {
+    t: "Rotate Arm",
+    d: "The base rotates (DOF 1) toward the designated color area.",
+    icon: RotateCw,
+  },
+  {
+    t: "Move to Correct Area",
+    d: "The shoulder (DOF 2) and elbow (DOF 3) extend to the correct drop zone.",
+    icon: MapPin,
+  },
   {
     t: "Release Block",
-    d: "The gripper opens and places the block precisely.",
+    d: "The gripper (DOF 4) opens and places the block precisely.",
     icon: CheckCircle2,
   },
   { t: "Return to Default Position", d: "The arm returns to its idle home pose.", icon: Bot },
@@ -1034,15 +1042,43 @@ function RoboticArmWorkflow() {
 // -----------------------------------------------------------------------------
 
 const ASSEMBLY = [
-  { t: "Prepare Components", d: "Lay out every component and check the parts list.", icon: Boxes },
-  { t: "Build Frame", d: "Assemble the mechanical frame of the robotic arm.", icon: Wrench },
-  { t: "Attach Servo Motors", d: "Mount the servos into each joint of the frame.", icon: Cog },
-  { t: "Install ESP32", d: "Secure the ESP32 microcontroller onto the base.", icon: Cpu },
+  {
+    t: "Prepare Components",
+    d: "Lay out every component (acrylic plates, 4 SG90 servos, screws) and check the parts list. Peel the protective film off the acrylic.",
+    icon: Boxes,
+  },
+  {
+    t: "Build Frame",
+    d: "Assemble the base and the mechanical structural linkages of the 4DOF robotic arm.",
+    icon: Wrench,
+  },
+  {
+    t: "Attach Servo Motors",
+    d: "Mount the 4 servos into each joint (Base, Shoulder, Elbow, Gripper) of the frame.",
+    icon: Cog,
+  },
+  {
+    t: "Install Microcontroller",
+    d: "Secure the ESP32/Arduino microcontroller and sensor shield onto the base.",
+    icon: Cpu,
+  },
   { t: "Connect Sensor", d: "Wire the color sensor above the pickup area.", icon: ScanLine },
-  { t: "Wire Components", d: "Route signal and power wires through the breadboard.", icon: Cable },
-  { t: "Upload Program", d: "Flash the IoTrack firmware to the ESP32.", icon: Zap },
-  { t: "Power On", d: "Apply regulated 5V and verify LEDs light up.", icon: Battery },
-  { t: "Test Robot", d: "Run the demonstration and observe the sort routine.", icon: Play },
+  {
+    t: "Wire Components",
+    d: "Route signal (PWM) and power wires from the servos to the expansion board.",
+    icon: Cable,
+  },
+  {
+    t: "Upload Program",
+    d: "Flash the IoTrack firmware to the microcontroller.",
+    icon: Zap,
+  },
+  { t: "Power On", d: "Apply regulated 5V power and verify LEDs light up.", icon: Battery },
+  {
+    t: "Test Robot",
+    d: "Run the demonstration and observe the sort routine.",
+    icon: Play,
+  },
 ];
 
 function AssemblyGuide() {
