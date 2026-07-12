@@ -1597,9 +1597,8 @@ function DemoSummary() {
             return (
               <div
                 key={i}
-                className={`flex shrink-0 flex-col items-center gap-4 md:flex-row ${
-                  i >= SUMMARY.length ? "hidden md:flex" : ""
-                }`}
+                className={`flex shrink-0 flex-col items-center gap-4 md:flex-row ${i >= SUMMARY.length ? "hidden md:flex" : ""
+                  }`}
               >
                 <Reveal delay={(i % SUMMARY.length) * 0.1} y={20} className="shrink-0">
                   <motion.div
@@ -1686,7 +1685,7 @@ function PostEvaluation() {
         <Reveal delay={0.3}>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <MagneticButton as="a" href="https://forms.gle/hQo4p9bneBuRinpq6">
-              Take Post-Test / Evaluation
+              Take Post-Test Assessment
               <ArrowRight className="h-4 w-4" />
             </MagneticButton>
             <MagneticButton
