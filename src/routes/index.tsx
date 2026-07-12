@@ -295,9 +295,9 @@ function Navbar() {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed inset-x-0 top-0 z-50 transition-all ${scrolled ? "py-2" : "py-4"}`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 sm:px-8">
         <div
-          className={`flex w-full items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all ${scrolled ? "glass shadow-soft" : ""}`}
+          className={`flex w-full items-center justify-between gap-4 rounded-full px-6 py-2.5 transition-all ${scrolled ? "glass shadow-soft" : ""}`}
         >
           <button onClick={() => go("home")} className="flex items-center gap-2 font-bold">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-brand text-primary-foreground shadow-glow">
@@ -380,7 +380,7 @@ function Hero() {
     >
       <BlobsBackground />
       <FloatingParticles count={26} />
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-6 pb-20 lg:grid-cols-2">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-8 pb-20 lg:grid-cols-2">
         <div>
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -580,7 +580,7 @@ function LearningJourney() {
   return (
     <section id="journey" className="relative overflow-hidden py-32">
       <BlobsBackground />
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="relative mx-auto max-w-6xl px-8">
         <SectionHeader
           eyebrow="Learning Journey"
           title="Your path through IoTrack"
@@ -666,7 +666,7 @@ function LearningJourney() {
 function WhatIsIoTrack() {
   return (
     <section className="relative overflow-hidden py-32">
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-7xl px-8">
         <div className="grid items-center gap-14 lg:grid-cols-2">
           <div>
             <Reveal>
@@ -774,7 +774,7 @@ function IoTConcepts() {
   return (
     <section className="relative overflow-hidden py-32">
       <BlobsBackground />
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-7xl px-8">
         <SectionHeader
           eyebrow="Step 3 · Core Concepts"
           title="The IoT ideas that power IoTrack"
@@ -886,7 +886,7 @@ const COMPONENTS = [
 function ComponentsSection() {
   return (
     <section className="relative overflow-hidden py-32">
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-7xl px-8">
         <SectionHeader
           eyebrow="Step 4 · Components Used"
           title="The hardware behind the kit"
@@ -974,7 +974,7 @@ function RoboticArmWorkflow() {
   return (
     <section id="robotic-arm" ref={ref} className="relative overflow-hidden py-32">
       <BlobsBackground />
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-7xl px-8">
         <SectionHeader
           eyebrow="Step 5 · The Main Event"
           title="How the robotic arm works"
@@ -1087,7 +1087,7 @@ const ASSEMBLY = [
 function AssemblyGuide() {
   return (
     <section id="assembly" className="relative overflow-hidden py-32">
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-7xl px-8">
         <SectionHeader
           eyebrow="Step 6 · Assembly Guide"
           title="Build your IoTrack, step by step"
@@ -1396,7 +1396,7 @@ function UserManual() {
   return (
     <section id="manual" className="relative overflow-hidden py-32">
       <BlobsBackground />
-      <div className="relative mx-auto max-w-4xl px-6">
+      <div className="relative mx-auto max-w-4xl px-8">
         <SectionHeader
           eyebrow="Step 7 · User Manual"
           title="Operating IoTrack"
@@ -1493,7 +1493,7 @@ function FAQs() {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faqs" className="relative overflow-hidden py-32">
-      <div className="relative mx-auto max-w-4xl px-6">
+      <div className="relative mx-auto max-w-4xl px-8">
         <SectionHeader
           eyebrow="Step 8 · FAQs"
           title="Frequently asked questions"
@@ -1609,7 +1609,7 @@ function DemoSummary() {
   return (
     <section id="demo" className="relative overflow-hidden py-32">
       <BlobsBackground />
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="relative mx-auto max-w-6xl px-8">
         <SectionHeader
           eyebrow="Step 9 · Demonstration Summary"
           title="The complete pick-and-sort loop"
@@ -1876,7 +1876,7 @@ function RoboticArmSimulator() {
       className="relative overflow-hidden border-t border-border/50 py-24 bg-background/5"
     >
       <BlobsBackground />
-      <div className="relative mx-auto max-w-5xl px-6">
+      <div className="relative mx-auto max-w-5xl px-8">
         <SectionHeader
           eyebrow="Interactive Simulation"
           title="Robotic Arm Kinematics Simulator"
@@ -2021,7 +2021,7 @@ function PostEvaluation() {
       <div className="absolute inset-0 bg-gradient-hero" />
       <FloatingParticles count={30} />
       <BlobsBackground />
-      <div className="relative mx-auto max-w-4xl px-6 text-center">
+      <div className="relative mx-auto max-w-4xl px-8 text-center">
         <Reveal>
           <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-gradient-brand text-primary-foreground shadow-glow">
             <Trophy className="h-9 w-9" />
@@ -2066,7 +2066,7 @@ function PostEvaluation() {
 function Footer() {
   return (
     <footer className="relative border-t border-border/50 bg-background/50 py-12 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-7xl px-8">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           {/* Brand & Affiliation */}
           <div className="space-y-4 max-w-md">
