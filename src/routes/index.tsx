@@ -40,6 +40,8 @@ import {
   GraduationCap,
   Mail,
   Github,
+  Check,
+  Copy,
 } from "lucide-react";
 
 import { RoboticArm } from "@/components/RoboticArm";
@@ -1131,6 +1133,205 @@ function AssemblyGuide() {
 // User Manual accordion
 // -----------------------------------------------------------------------------
 
+function CodeClipboard() {
+  const [copied, setCopied] = useState(false);
+  const codeText = `#include <Servo.h>
+
+// Define Servo Objects
+Servo baseServo;
+Servo shoulderServo;
+Servo elbowServo;
+Servo gripperServo;
+
+// Pin Configurations
+const int BASE_PIN = 3;
+const int SHOULDER_PIN = 5;
+const int ELBOW_PIN = 6;
+const int GRIPPER_PIN = 9;
+
+const int JOY_X1 = A0; // Base Control
+const int JOY_Y1 = A1; // Shoulder Control
+
+void setup() {
+  // Attach servos to respective PWM pins
+  baseServo.attach(BASE_PIN);
+  shoulderServo.attach(SHOULDER_PIN);
+  elbowServo.attach(ELBOW_PIN);
+  gripperServo.attach(GRIPPER_PIN);
+
+  // Calibration Safe-State: Force all servos to mid-points
+  baseServo.write(90);
+  shoulderServo.write(90);
+  elbowServo.write(90);
+  gripperServo.write(90);
+  
+  delay(2000); // Wait 2 seconds for mechanical alignment
+}
+
+void loop() {
+  // Read joystick input values (0 to 1023)
+  int valX = analogRead(JOY_X1);
+  int valY = analogRead(JOY_Y1);
+
+  // Map analog inputs to safe operating angles
+  int targetBase = map(valX, 0, 1023, 10, 170);
+  int targetShoulder = map(valY, 0, 1023, 30, 150);
+
+  // Write smooth updates to actuators
+  baseServo.write(targetBase);
+  shoulderServo.write(targetShoulder);
+  
+  delay(20); // Frequency delay stabilizing the loop
+}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(codeText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-black/30 text-left font-mono shadow-soft">
+      {/* Clipboard Header */}
+      <div className="flex items-center justify-between border-b border-border/40 bg-black/20 px-5 py-3 text-xs text-muted-foreground">
+        <span className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-brand" />
+          <span>calibration.ino</span>
+        </span>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 rounded-lg border border-border/40 bg-background/5 px-2.5 py-1 text-xs font-semibold text-muted-foreground transition-all hover:bg-background/10 hover:text-foreground active:scale-95 cursor-pointer"
+        >
+          {copied ? (
+            <>
+              <Check className="h-3.5 w-3.5 text-emerald-500" />
+              <span className="text-emerald-500">Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy className="h-3.5 w-3.5" />
+              <span>Copy code</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Code Area */}
+      <div className="overflow-x-auto p-5 text-xs leading-relaxed text-foreground/90 selection:bg-brand/30">
+        <pre className="scrollbar-none">
+          <code>
+            <span className="text-brand">#include</span>{" "}
+            <span className="text-brand-2">&lt;Servo.h&gt;</span>
+            {"\n\n"}
+            <span className="text-muted-foreground">// Define Servo Objects</span>
+            {"\n"}
+            <span className="text-brand">Servo</span> baseServo;{"\n"}
+            <span className="text-brand">Servo</span> shoulderServo;{"\n"}
+            <span className="text-brand">Servo</span> elbowServo;{"\n"}
+            <span className="text-brand">Servo</span> gripperServo;{"\n\n"}
+            <span className="text-muted-foreground">// Pin Configurations</span>
+            {"\n"}
+            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
+            BASE_PIN = <span className="text-cyan-400">3</span>;{"\n"}
+            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
+            SHOULDER_PIN = <span className="text-cyan-400">5</span>;{"\n"}
+            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
+            ELBOW_PIN = <span className="text-cyan-400">6</span>;{"\n"}
+            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
+            GRIPPER_PIN = <span className="text-cyan-400">9</span>;{"\n\n"}
+            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
+            JOY_X1 = <span className="text-cyan-400">A0</span>;{" "}
+            <span className="text-muted-foreground">// Base Control</span>
+            {"\n"}
+            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
+            JOY_Y1 = <span className="text-cyan-400">A1</span>;{" "}
+            <span className="text-muted-foreground">// Shoulder Control</span>
+            {"\n\n"}
+            <span className="text-blue-400">void</span>{" "}
+            <span className="text-purple-400 font-semibold">setup</span>() &#123;{"\n"}
+            <span className="text-muted-foreground"> // Attach servos to respective PWM pins</span>
+            {"\n"}
+            {"  "}baseServo.<span className="text-purple-400">attach</span>(BASE_PIN);{"\n"}
+            {"  "}shoulderServo.<span className="text-purple-400">attach</span>(SHOULDER_PIN);{"\n"}
+            {"  "}elbowServo.<span className="text-purple-400">attach</span>(ELBOW_PIN);{"\n"}
+            {"  "}gripperServo.<span className="text-purple-400">attach</span>(GRIPPER_PIN);{"\n\n"}
+            <span className="text-muted-foreground">
+              {" "}
+              // Calibration Safe-State: Force all servos to mid-points
+            </span>
+            {"\n"}
+            {"  "}baseServo.<span className="text-purple-400">write</span>(
+            <span className="text-cyan-400">90</span>);{"\n"}
+            {"  "}shoulderServo.<span className="text-purple-400">write</span>(
+            <span className="text-cyan-400">90</span>);{"\n"}
+            {"  "}elbowServo.<span className="text-purple-400">write</span>(
+            <span className="text-cyan-400">90</span>);{"\n"}
+            {"  "}gripperServo.<span className="text-purple-400">write</span>(
+            <span className="text-cyan-400">90</span>);{"\n\n"}
+            {"  "}
+            <span className="text-purple-400">delay</span>(
+            <span className="text-cyan-400">2000</span>);{" "}
+            <span className="text-muted-foreground">
+              // Wait 2 seconds for mechanical alignment
+            </span>
+            {"\n"}
+            &#125;{"\n\n"}
+            <span className="text-blue-400">void</span>{" "}
+            <span className="text-purple-400 font-semibold">loop</span>() &#123;{"\n"}
+            <span className="text-muted-foreground">
+              {" "}
+              // Read joystick input values (0 to 1023)
+            </span>
+            {"\n"}
+            {"  "}
+            <span className="text-blue-400">int</span> valX ={" "}
+            <span className="text-purple-400">analogRead</span>(JOY_X1);{"\n"}
+            {"  "}
+            <span className="text-blue-400">int</span> valY ={" "}
+            <span className="text-purple-400">analogRead</span>(JOY_Y1);{"\n\n"}
+            <span className="text-muted-foreground">
+              {" "}
+              // Map analog inputs to safe operating angles
+            </span>
+            {"\n"}
+            {"  "}
+            <span className="text-blue-400">int</span> targetBase ={" "}
+            <span className="text-purple-400">map</span>(valX,{" "}
+            <span className="text-cyan-400">0</span>, <span className="text-cyan-400">1023</span>,{" "}
+            <span className="text-cyan-400">10</span>, <span className="text-cyan-400">170</span>);
+            {"\n"}
+            {"  "}
+            <span className="text-blue-400">int</span> targetShoulder ={" "}
+            <span className="text-purple-400">map</span>(valY,{" "}
+            <span className="text-cyan-400">0</span>, <span className="text-cyan-400">1023</span>,{" "}
+            <span className="text-cyan-400">30</span>, <span className="text-cyan-400">150</span>);
+            {"\n\n"}
+            <span className="text-muted-foreground"> // Write smooth updates to actuators</span>
+            {"\n"}
+            {"  "}baseServo.<span className="text-purple-400">write</span>(targetBase);{"\n"}
+            {"  "}shoulderServo.<span className="text-purple-400">write</span>(targetShoulder);
+            {"\n\n"}
+            {"  "}
+            <span className="text-purple-400">delay</span>(<span className="text-cyan-400">20</span>
+            );{" "}
+            <span className="text-muted-foreground">// Frequency delay stabilizing the loop</span>
+            {"\n"}
+            &#125;
+          </code>
+        </pre>
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// User Manual accordion
+// -----------------------------------------------------------------------------
+
 const MANUAL = [
   {
     t: "Getting Started",
@@ -1138,27 +1339,27 @@ const MANUAL = [
   },
   {
     t: "Powering On",
-    d: "Connect the regulated 5V supply. The ESP32's onboard LED will light up and the arm will home to its default position.",
+    d: "Always use the dedicated 5V external power supply. Do not rely solely on USB power, as 4 servos will draw too much current.",
   },
   {
     t: "Running Demonstration",
-    d: "Place a color block in the pickup zone. IoTrack will scan, decide, pick and sort it into its matching drop area.",
+    d: "Boot the system and use the web dashboard or analog joysticks to control the X/Y axes of the arm.",
   },
   {
-    t: "Sensor Calibration",
-    d: "Use the calibration routine to teach the sensor each color under the current lighting conditions before demos.",
+    t: "Sensor & Servo Calibration",
+    d: "Crucial Step. You must electronically center all 4 servos to 90 degrees before screwing the acrylic pieces to them to prevent mechanical binding.",
   },
   {
     t: "Maintenance",
-    d: "Keep the servos free of dust, tighten screws periodically, and check wire connections before every session.",
+    d: "Check for loose nuts periodically due to mechanical vibrations. Do not force the joints by hand when powered off to protect the fragile nylon gears.",
   },
   {
     t: "Troubleshooting",
-    d: "If the arm doesn't move, verify power. If colors are misread, recalibrate the sensor and reduce ambient glare.",
+    d: "If the arm twitches, check your power supply. If a servo buzzes and gets hot, it is stalling; unplug immediately and recalibrate the center point.",
   },
   {
     t: "Safety",
-    d: "Keep fingers clear of the gripper during motion. Always power off before rewiring or removing components.",
+    d: "Keep fingers clear of the pinch points in the parallel linkages and gripper gears during operation.",
   },
 ];
 
@@ -1201,8 +1402,20 @@ function UserManual() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <div className="border-t border-border/50 px-5 pb-5 pt-4 text-sm text-muted-foreground">
-                          {m.d}
+                        <div className="border-t border-border/50 px-5 pb-5 pt-4 text-sm text-muted-foreground space-y-4">
+                          <div>{m.d}</div>
+                          {m.t.includes("Calibration") && (
+                            <div className="mt-4 border-t border-border/30 pt-4">
+                              <div className="mb-1 text-xs font-bold uppercase tracking-wider text-brand">
+                                Initial Software Calibration Code
+                              </div>
+                              <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
+                                This script centers and holds the servos for calibration and
+                                establishes basic manual control.
+                              </p>
+                              <CodeClipboard />
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                     )}
@@ -1224,27 +1437,27 @@ function UserManual() {
 const FAQS = [
   {
     q: "What is IoTrack?",
-    a: "IoTrack is an IoT-powered educational kit that pairs a color-sensing robotic arm with a companion learning website to teach IoT and robotics concepts through hands-on demonstration.",
+    a: "IoTrack is an IoT-powered educational kit that pairs a 4DOF robotic arm with a companion learning website to teach IoT and robotics concepts through hands-on demonstration.",
   },
   {
     q: "How does color detection work?",
-    a: "A color sensor above the pickup zone reads RGB values of the block's surface. The ESP32 interprets those values and maps them to a specific drop area.",
+    a: "An RGB sensor shines a white light on an object and measures the intensity of red, green, and blue light reflected back to determine the color.",
   },
   {
-    q: "How does the robotic arm move?",
-    a: "Servo motors at each joint receive angle commands from the ESP32. Coordinated movements produce base rotation, elbow flexion, wrist tilt and gripper actuation.",
+    q: "How does the 4DOF robotic arm move?",
+    a: "It uses Pulse Width Modulation (PWM). The microcontroller sends electrical pulses to four separate servos: one rotates the base, one pitches the shoulder, one pitches the elbow, and one actuates the gripper.",
   },
   {
-    q: "How does ESP32 communicate?",
-    a: "The ESP32 has built-in Wi-Fi and Bluetooth. For IoTrack it can be extended to publish sensor readings or receive commands wirelessly.",
+    q: "How does the microcontroller communicate?",
+    a: "It utilizes built-in Wi-Fi to connect to a local network, allowing it to send telemetry data and receive movement commands via WebSockets or MQTT.",
   },
   {
-    q: "How do I calibrate the sensor?",
-    a: "Run the calibration routine with each reference block under the room's current lighting so the sensor learns the RGB ranges it should map to each color.",
+    q: "How do I calibrate the servos?",
+    a: 'Run the provided calibration script to lock all motors at exactly 90 degrees. Once locked, attach the acrylic horns so the arm sits in a perfect "L" shape.',
   },
   {
     q: "How do I maintain the robotic arm?",
-    a: "Keep the servos clean, retighten mounting screws periodically, inspect the wiring before each session, and store the kit in a dry environment.",
+    a: "Ensure the power supply is stable, never manually force the joints, and keep the pivot screws snug but not overly tight to allow smooth articulation.",
   },
 ];
 
