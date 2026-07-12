@@ -1718,7 +1718,8 @@ function RoboticArmSimulator() {
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw engineering grid background
+    // Draw engineering grid background (no shadow)
+    ctx.save();
     ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.04)";
     ctx.lineWidth = 1;
     const gridSize = 25;
@@ -1734,16 +1735,14 @@ function RoboticArmSimulator() {
       ctx.lineTo(canvas.width, y);
       ctx.stroke();
     }
+    ctx.restore();
 
-    // Kinematic pixel parameters for side-profile view
+    // Kinematic pixel parameters for side-profile view (matching riser alignment)
     const x0 = canvas.width / 2;
-    const y0 = canvas.height - 50;
-    const baseW = 90;
-    const baseH = 30;
+    const y0 = canvas.height - 75; // Top surface of base where shoulder pivots
 
     const L1_px = 100;
     const L2_px = 80;
-    const L3_px = 25;
 
     // Joint positions
     const x1 = x0;
@@ -1753,7 +1752,8 @@ function RoboticArmSimulator() {
     const x3 = x2 + L2_px * Math.cos(radForearm);
     const y3 = y2 - L2_px * Math.sin(radForearm); // Wrist joint
 
-    // Draw coordinate axis in bottom-left corner
+    // Draw coordinate axis in bottom-left corner (no shadow)
+    ctx.save();
     ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)";
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -1773,92 +1773,157 @@ function RoboticArmSimulator() {
     ctx.font = "10px monospace";
     ctx.fillText("X", 75, canvas.height - 37);
     ctx.fillText("Z", 37, canvas.height - 75);
+    ctx.restore();
 
-    // Draw Base
-    ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.04)";
-    ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.15)";
-    ctx.lineWidth = 2.5;
+    // Enable soft drop-shadow styling for physical arm components
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+    ctx.shadowBlur = 12;
+    ctx.shadowOffsetY = 6;
+    ctx.shadowOffsetX = 0;
+
+    // 1. Draw Base Shadow Ellipse
+    ctx.fillStyle = "oklch(0.55 0.02 260 / 0.25)";
     ctx.beginPath();
-    ctx.roundRect(x0 - baseW / 2, y0, baseW, baseH, 6);
+    ctx.ellipse(x0, y0 + 55, 110, 14, 0, 0, 2 * Math.PI);
     ctx.fill();
-    ctx.stroke();
 
-    // Draw Base Rotation Indicator (Gauge)
-    ctx.strokeStyle = isDark ? "rgba(236, 72, 153, 0.4)" : "rgba(236, 72, 153, 0.6)"; // brand pink
+    // 2. Draw Main Base Rect (gradient matching armGrad2: blue-to-purple)
+    const baseGrad1 = ctx.createLinearGradient(x0 - 70, y0 + 15, x0 + 70, y0 + 45);
+    baseGrad1.addColorStop(0, "oklch(0.72 0.18 190)");
+    baseGrad1.addColorStop(1, "oklch(0.6 0.22 265)");
+    ctx.fillStyle = baseGrad1;
+    ctx.beginPath();
+    ctx.roundRect(x0 - 70, y0 + 15, 140, 30, 10);
+    ctx.fill();
+
+    // 3. Draw Base Riser Rect (gradient matching armGrad: fuchsia-to-violet)
+    const baseGrad2 = ctx.createLinearGradient(x0 - 50, y0, x0 + 50, y0 + 20);
+    baseGrad2.addColorStop(0, "oklch(0.72 0.18 265)");
+    baseGrad2.addColorStop(1, "oklch(0.7 0.2 320)");
+    ctx.fillStyle = baseGrad2;
+    ctx.beginPath();
+    ctx.roundRect(x0 - 50, y0, 100, 20, 6);
+    ctx.fill();
+    ctx.restore();
+
+    // 4. Draw Base Rotation Indicator Gauge (no shadow)
+    ctx.save();
+    ctx.strokeStyle = isDark ? "rgba(236, 72, 153, 0.4)" : "rgba(236, 72, 153, 0.6)";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.arc(x0, y0 + baseH / 2, 18, Math.PI, 0);
+    ctx.arc(x0, y0 + 30, 18, Math.PI, 0);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(x0, y0 + baseH / 2);
-    ctx.lineTo(x0 + 18 * Math.cos(radBase), y0 + baseH / 2 - 18 * Math.sin(radBase));
+    ctx.moveTo(x0, y0 + 30);
+    ctx.lineTo(x0 + 18 * Math.cos(radBase), y0 + 30 - 18 * Math.sin(radBase));
     ctx.stroke();
+    ctx.restore();
 
-    // Draw Link 1 (Shoulder to Elbow)
-    ctx.strokeStyle = "oklch(0.6 0.22 265)"; // brand purple
-    ctx.lineWidth = 8;
+    // Apply drop shadows for links & components
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+    ctx.shadowBlur = 12;
+    ctx.shadowOffsetY = 6;
+    ctx.shadowOffsetX = 0;
+
+    // 5. Draw Link 1 (Shoulder to Elbow) using fuchsia/violet linear gradient (armGrad)
+    const linkGrad1 = ctx.createLinearGradient(x1, y1, x2, y2);
+    linkGrad1.addColorStop(0, "oklch(0.72 0.18 265)");
+    linkGrad1.addColorStop(1, "oklch(0.7 0.2 320)");
+    ctx.strokeStyle = linkGrad1;
+    ctx.lineWidth = 20; // Thick premium physical link
     ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
 
-    // Draw Link 2 (Elbow to Wrist)
-    ctx.strokeStyle = "oklch(0.7 0.2 320)"; // brand pink/fuchsia
-    ctx.lineWidth = 5.5;
+    // 6. Draw Link 2 (Elbow to Wrist) using blue/purple linear gradient (armGrad2)
+    const linkGrad2 = ctx.createLinearGradient(x2, y2, x3, y3);
+    linkGrad2.addColorStop(0, "oklch(0.72 0.18 190)");
+    linkGrad2.addColorStop(1, "oklch(0.6 0.22 265)");
+    ctx.strokeStyle = linkGrad2;
+    ctx.lineWidth = 16;
+    ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(x2, y2);
     ctx.lineTo(x3, y3);
     ctx.stroke();
 
-    // Draw Joint Circles
-    ctx.fillStyle = "#ffffff";
-    ctx.strokeStyle = "oklch(0.6 0.22 265)";
-    ctx.lineWidth = 2;
+    // 7. Draw Wrist + Gripper Head (gradient matching armGrad, and rotated claws)
+    ctx.save();
+    ctx.translate(x3, y3);
+    ctx.rotate((-globalForearmAngle * Math.PI) / 180);
 
-    // Shoulder joint
+    // Gripper head block
+    const gripHeadGrad = ctx.createLinearGradient(-8, -17, 12, 17);
+    gripHeadGrad.addColorStop(0, "oklch(0.72 0.18 265)");
+    gripHeadGrad.addColorStop(1, "oklch(0.7 0.2 320)");
+    ctx.fillStyle = gripHeadGrad;
     ctx.beginPath();
-    ctx.arc(x1, y1, 8, 0, 2 * Math.PI);
+    ctx.roundRect(-8, -17, 20, 34, 6);
     ctx.fill();
-    ctx.stroke();
 
-    // Elbow joint
+    // Decorative gripper circles
+    ctx.fillStyle = "oklch(0.98 0 0)";
     ctx.beginPath();
-    ctx.arc(x2, y2, 6, 0, 2 * Math.PI);
+    ctx.arc(2, 0, 5, 0, 2 * Math.PI);
     ctx.fill();
-    ctx.stroke();
 
-    // Draw Gripper Fingers (Claws)
+    ctx.fillStyle = "oklch(0.6 0.22 265)";
+    ctx.beginPath();
+    ctx.arc(2, 0, 2.5, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Gripper claws responsive slider values mapping
     const gripperRatio = gripperClaws / 100;
-    const spreadAngle = (22 * (1 - gripperRatio) * Math.PI) / 180;
-    const f1Angle = radForearm - spreadAngle;
-    const f2Angle = radForearm + spreadAngle;
+    const clawOffset = 5 * gripperRatio;
+    ctx.fillStyle = "oklch(0.3 0.03 260)";
 
-    const xf1 = x3 + L3_px * Math.cos(f1Angle);
-    const yf1 = y3 - L3_px * Math.sin(f1Angle);
-    const xf2 = x3 + L3_px * Math.cos(f2Angle);
-    const yf2 = y3 - L3_px * Math.sin(f2Angle);
-
-    ctx.strokeStyle = isDark ? "#ffffff" : "#1e1b4b";
-    ctx.lineWidth = 3.5;
+    // Top claw
     ctx.beginPath();
-    ctx.moveTo(x3, y3);
-    ctx.lineTo(xf1, yf1);
-    ctx.stroke();
+    ctx.roundRect(12, -16 + clawOffset, 14, 6, 1.5);
+    ctx.fill();
 
+    // Bottom claw
     ctx.beginPath();
-    ctx.moveTo(x3, y3);
-    ctx.lineTo(xf2, yf2);
-    ctx.stroke();
+    ctx.roundRect(12, 10 - clawOffset, 14, 6, 1.5);
+    ctx.fill();
+    ctx.restore();
 
-    // Joint Text Labels
+    // 8. Draw Joint Center Caps (drawn on top of links to cover junctions)
+    // Shoulder joint cap
+    ctx.fillStyle = "oklch(0.2 0.03 260)";
+    ctx.beginPath();
+    ctx.arc(x1, y1, 14, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = "oklch(0.72 0.18 265)";
+    ctx.beginPath();
+    ctx.arc(x1, y1, 6, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Elbow joint cap
+    ctx.fillStyle = "oklch(0.2 0.03 260)";
+    ctx.beginPath();
+    ctx.arc(x2, y2, 11, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = "oklch(0.72 0.18 190)";
+    ctx.beginPath();
+    ctx.arc(x2, y2, 5, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.restore();
+
+    // Draw Joint text labels (no shadow)
+    ctx.save();
     ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.6)";
     ctx.font = "9px monospace";
-    ctx.fillText("Base", x0 - baseW / 2 - 32, y0 + baseH / 2 + 3);
-    ctx.fillText("Shoulder", x1 + 14, y1 + 3);
-    ctx.fillText("Elbow", x2 + 12, y2 + 3);
-    ctx.fillText("Gripper", x3 + 12, y3 - 10);
+    ctx.fillText("Base", x0 - 80, y0 + 35);
+    ctx.fillText("Shoulder", x1 + 18, y1 + 3);
+    ctx.fillText("Elbow", x2 + 15, y2 + 3);
+    ctx.fillText("Gripper", x3 + 18, y3 - 10);
+    ctx.restore();
   }, [
     baseRotation,
     shoulderAngle,
