@@ -2076,14 +2076,14 @@ function Footer() {
               </span>
               <span className="text-gradient-brand">IoTrack</span>
             </div>
-            <p className="text-xs leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               An integrated, IoT-based educational learning kit combining a physical 4DOF robotic
               arm with a companion learning website. Developed for Mapúa University Makati.
             </p>
             <div className="flex gap-4 pt-1">
               <a
                 href="mailto:iotrack@university.edu"
-                className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-brand transition-colors"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand transition-colors"
               >
                 <Mail className="h-3.5 w-3.5 text-brand" />
                 <span>iotrack@university.edu</span>
@@ -2092,7 +2092,7 @@ function Footer() {
                 href="https://github.com/iotrack"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-brand transition-colors"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-brand transition-colors"
               >
                 <Github className="h-3.5 w-3.5 text-brand" />
                 <span>github.com/iotrack</span>
@@ -2105,7 +2105,7 @@ function Footer() {
             <div className="text-xs font-bold uppercase tracking-wider text-foreground/75">
               Thesis Group Members
             </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground md:flex-col md:gap-2">
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-muted-foreground md:flex-col md:gap-2">
               <span>Selene Angel G. Aguilar</span>
               <span>Julia Venice B. Fulgar</span>
               <span>Emmanuel Josh M. Pabillo</span>
@@ -2117,7 +2117,7 @@ function Footer() {
             <div className="text-xs font-bold uppercase tracking-wider text-foreground/75">
               Quick Links
             </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground md:flex-col md:gap-2">
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-muted-foreground md:flex-col md:gap-2">
               <button
                 onClick={() =>
                   document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" })
@@ -2155,7 +2155,7 @@ function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/20 pt-6 text-[10px] text-muted-foreground sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/20 pt-6 text-xs text-muted-foreground sm:flex-row">
           <div>© {new Date().getFullYear()} IoTrack. All rights reserved.</div>
           <div className="flex gap-4">
             <a href="#" className="hover:text-foreground transition-colors">
