@@ -63,7 +63,8 @@
   --brand-foreground: oklch(0.99 0 0);
   --brand-2: oklch(0.72 0.18 190);
   --accent-glow: oklch(0.78 0.18 320);
-  --gradient-hero: radial-gradient(ellipse at top, oklch(0.75 0.18 265 / 0.35), transparent 60%),
+  --gradient-hero:
+    radial-gradient(ellipse at top, oklch(0.75 0.18 265 / 0.35), transparent 60%),
     radial-gradient(ellipse at bottom right, oklch(0.78 0.18 320 / 0.25), transparent 60%),
     radial-gradient(ellipse at bottom left, oklch(0.72 0.18 190 / 0.25), transparent 60%);
   --gradient-brand: linear-gradient(135deg, oklch(0.6 0.22 265), oklch(0.7 0.2 320));
@@ -96,7 +97,8 @@
   --brand-foreground: oklch(0.13 0.02 260);
   --brand-2: oklch(0.78 0.16 190);
   --accent-glow: oklch(0.75 0.2 320);
-  --gradient-hero: radial-gradient(ellipse at top, oklch(0.55 0.24 265 / 0.4), transparent 60%),
+  --gradient-hero:
+    radial-gradient(ellipse at top, oklch(0.55 0.24 265 / 0.4), transparent 60%),
     radial-gradient(ellipse at bottom right, oklch(0.6 0.24 320 / 0.3), transparent 60%),
     radial-gradient(ellipse at bottom left, oklch(0.55 0.2 190 / 0.3), transparent 60%);
   --shadow-glow: 0 20px 80px -20px oklch(0.72 0.22 265 / 0.6);
@@ -116,7 +118,10 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -151,31 +156,74 @@
 }
 
 @keyframes float-slow {
-  0%, 100% { transform: translateY(0px) }
-  50% { transform: translateY(-14px) }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
 }
 @keyframes blob {
-  0%, 100% { transform: translate(0,0) scale(1) }
-  33% { transform: translate(30px,-40px) scale(1.1) }
-  66% { transform: translate(-20px,30px) scale(0.95) }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -40px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 30px) scale(0.95);
+  }
 }
 @keyframes servo-sweep {
-  0%, 100% { transform: rotate(-15deg) }
-  50% { transform: rotate(15deg) }
+  0%,
+  100% {
+    transform: rotate(-15deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
 }
 @keyframes gripper {
-  0%, 100% { transform: translateX(0) }
-  50% { transform: translateX(3px) }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
 }
 @keyframes scan {
-  0% { transform: translateY(-100%); opacity: 0 }
-  20% { opacity: 1 }
-  80% { opacity: 1 }
-  100% { transform: translateY(100%); opacity: 0 }
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
 }
 
-@utility animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
-@utility animate-blob { animation: blob 18s ease-in-out infinite; }
-@utility animate-servo { animation: servo-sweep 5s ease-in-out infinite; transform-origin: center; }
-@utility animate-gripper { animation: gripper 2s ease-in-out infinite; }
-@utility animate-scan { animation: scan 2.5s ease-in-out infinite; }
+@utility animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+@utility animate-blob {
+  animation: blob 18s ease-in-out infinite;
+}
+@utility animate-servo {
+  animation: servo-sweep 5s ease-in-out infinite;
+  transform-origin: center;
+}
+@utility animate-gripper {
+  animation: gripper 2s ease-in-out infinite;
+}
+@utility animate-scan {
+  animation: scan 2.5s ease-in-out infinite;
+}

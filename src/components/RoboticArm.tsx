@@ -42,7 +42,15 @@ export function RoboticArm({ className, animate = true }: Props) {
         animate={animate ? { rotate: [-8, 12, -8] } : undefined}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
-        <rect x="190" y="180" width="20" height="115" rx="8" fill="url(#armGrad)" filter="url(#softShadow)" />
+        <rect
+          x="190"
+          y="180"
+          width="20"
+          height="115"
+          rx="8"
+          fill="url(#armGrad)"
+          filter="url(#softShadow)"
+        />
         <circle cx="200" cy="290" r="14" fill="oklch(0.2 0.03 260)" />
         <circle cx="200" cy="290" r="6" fill="oklch(0.72 0.18 265)" />
 
@@ -52,7 +60,15 @@ export function RoboticArm({ className, animate = true }: Props) {
           animate={animate ? { rotate: [10, -20, 10] } : undefined}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         >
-          <rect x="192" y="90" width="16" height="100" rx="7" fill="url(#armGrad2)" filter="url(#softShadow)" />
+          <rect
+            x="192"
+            y="90"
+            width="16"
+            height="100"
+            rx="7"
+            fill="url(#armGrad2)"
+            filter="url(#softShadow)"
+          />
           <circle cx="200" cy="185" r="11" fill="oklch(0.2 0.03 260)" />
           <circle cx="200" cy="185" r="5" fill="oklch(0.72 0.18 190)" />
 
@@ -67,12 +83,22 @@ export function RoboticArm({ className, animate = true }: Props) {
             <circle cx="200" cy="87" r="3" fill="oklch(0.6 0.22 265)" />
             {/* Gripper fingers */}
             <motion.rect
-              x="180" y="104" width="6" height="20" rx="2" fill="oklch(0.3 0.03 260)"
+              x="180"
+              y="104"
+              width="6"
+              height="20"
+              rx="2"
+              fill="oklch(0.3 0.03 260)"
               animate={animate ? { x: [180, 184, 180] } : undefined}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.rect
-              x="214" y="104" width="6" height="20" rx="2" fill="oklch(0.3 0.03 260)"
+              x="214"
+              y="104"
+              width="6"
+              height="20"
+              rx="2"
+              fill="oklch(0.3 0.03 260)"
               animate={animate ? { x: [214, 210, 214] } : undefined}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />

@@ -100,9 +100,7 @@ function SectionHeader({
         </Reveal>
       )}
       <Reveal delay={0.1}>
-        <h2 className="mt-5 text-4xl font-bold sm:text-5xl md:text-6xl">
-          {title}
-        </h2>
+        <h2 className="mt-5 text-4xl font-bold sm:text-5xl md:text-6xl">{title}</h2>
       </Reveal>
       {description && (
         <Reveal delay={0.2}>
@@ -141,7 +139,10 @@ function MagneticButton({
     x.set(((e.clientX - r.left - r.width / 2) / r.width) * 20);
     y.set(((e.clientY - r.top - r.height / 2) / r.height) * 20);
   };
-  const reset = () => { x.set(0); y.set(0); };
+  const reset = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   const base =
     variant === "primary"
@@ -164,7 +165,13 @@ function MagneticButton({
 
   if (as === "a") {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick} className="inline-block">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+        className="inline-block"
+      >
         {Content}
       </a>
     );
@@ -193,7 +200,12 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [inView, to]);
-  return <span ref={ref}>{n}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      {n}
+      {suffix}
+    </span>
+  );
 }
 
 function FloatingParticles({ count = 20 }: { count?: number }) {
@@ -218,7 +230,12 @@ function FloatingParticles({ count = 20 }: { count?: number }) {
               x: [0, Math.random() * 20 - 10, 0],
               opacity: [0.15, 0.55, 0.15],
             }}
-            transition={{ duration: dur, repeat: Infinity, ease: "easeInOut", delay: Math.random() * 5 }}
+            transition={{
+              duration: dur,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 5,
+            }}
           />
         );
       })}
@@ -230,8 +247,14 @@ function BlobsBackground() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <div className="absolute -left-32 top-10 h-96 w-96 rounded-full bg-brand/30 blur-3xl animate-blob" />
-      <div className="absolute right-0 top-40 h-[500px] w-[500px] rounded-full bg-accent-glow/25 blur-3xl animate-blob" style={{ animationDelay: "4s" }} />
-      <div className="absolute left-1/3 bottom-0 h-96 w-96 rounded-full bg-brand-2/25 blur-3xl animate-blob" style={{ animationDelay: "8s" }} />
+      <div
+        className="absolute right-0 top-40 h-[500px] w-[500px] rounded-full bg-accent-glow/25 blur-3xl animate-blob"
+        style={{ animationDelay: "4s" }}
+      />
+      <div
+        className="absolute left-1/3 bottom-0 h-96 w-96 rounded-full bg-brand-2/25 blur-3xl animate-blob"
+        style={{ animationDelay: "8s" }}
+      />
     </div>
   );
 }
@@ -271,7 +294,9 @@ function Navbar() {
       className={`fixed inset-x-0 top-0 z-50 transition-all ${scrolled ? "py-2" : "py-4"}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4">
-        <div className={`flex w-full items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all ${scrolled ? "glass shadow-soft" : ""}`}>
+        <div
+          className={`flex w-full items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all ${scrolled ? "glass shadow-soft" : ""}`}
+        >
           <button onClick={() => go("home")} className="flex items-center gap-2 font-bold">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-brand text-primary-foreground shadow-glow">
               <Bot className="h-5 w-5" />
@@ -373,17 +398,26 @@ function Hero() {
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground sm:text-xl">
-              Learn the fundamentals of the Internet of Things through an interactive robotic
-              arm demonstration.
+              Learn the fundamentals of the Internet of Things through an interactive robotic arm
+              demonstration.
             </p>
           </Reveal>
           <Reveal delay={0.3}>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <MagneticButton onClick={() => document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" })}>
+              <MagneticButton
+                onClick={() =>
+                  document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
                 Start Learning Session
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </MagneticButton>
-              <MagneticButton variant="ghost" onClick={() => document.getElementById("robotic-arm")?.scrollIntoView({ behavior: "smooth" })}>
+              <MagneticButton
+                variant="ghost"
+                onClick={() =>
+                  document.getElementById("robotic-arm")?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
                 <Play className="h-4 w-4" />
                 Watch Demo
               </MagneticButton>
@@ -400,7 +434,9 @@ function Hero() {
                   <div className="text-3xl font-bold text-gradient-brand">
                     <Counter to={s.n} suffix={s.s} />
                   </div>
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground">{s.l}</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                    {s.l}
+                  </div>
                 </div>
               ))}
             </div>
@@ -470,16 +506,66 @@ function Hero() {
 // -----------------------------------------------------------------------------
 
 const JOURNEY = [
-  { id: 1, title: "Pre-Evaluation", desc: "Take the Pre-Test to measure your baseline understanding.", icon: GraduationCap },
-  { id: 2, title: "What is IoTrack?", desc: "Understand the project, its objectives and its educational purpose.", icon: BookOpen },
-  { id: 3, title: "IoT Concepts", desc: "Explore sensors, microcontrollers, communication and automation.", icon: Wifi },
-  { id: 4, title: "Components Used", desc: "Meet the hardware that powers the IoTrack robotic arm.", icon: Boxes },
-  { id: 5, title: "How the Robotic Arm Works", desc: "Watch the full pick-and-place workflow, step by step.", icon: Bot },
-  { id: 6, title: "Assembly Guide", desc: "Follow a guided build — from frame to first movement.", icon: Wrench },
-  { id: 7, title: "User Manual", desc: "Operate, calibrate and maintain the robotic arm.", icon: BookOpen },
-  { id: 8, title: "FAQs", desc: "Answers to the most common questions from students.", icon: Sparkles },
-  { id: 9, title: "Demonstration Summary", desc: "Recap the complete pick-and-sort demonstration.", icon: Radar },
-  { id: 10, title: "Post-Evaluation", desc: "Complete the Post-Test to measure what you've learned.", icon: Trophy },
+  {
+    id: 1,
+    title: "Pre-Evaluation",
+    desc: "Take the Pre-Test to measure your baseline understanding.",
+    icon: GraduationCap,
+  },
+  {
+    id: 2,
+    title: "What is IoTrack?",
+    desc: "Understand the project, its objectives and its educational purpose.",
+    icon: BookOpen,
+  },
+  {
+    id: 3,
+    title: "IoT Concepts",
+    desc: "Explore sensors, microcontrollers, communication and automation.",
+    icon: Wifi,
+  },
+  {
+    id: 4,
+    title: "Components Used",
+    desc: "Meet the hardware that powers the IoTrack robotic arm.",
+    icon: Boxes,
+  },
+  {
+    id: 5,
+    title: "How the Robotic Arm Works",
+    desc: "Watch the full pick-and-place workflow, step by step.",
+    icon: Bot,
+  },
+  {
+    id: 6,
+    title: "Assembly Guide",
+    desc: "Follow a guided build — from frame to first movement.",
+    icon: Wrench,
+  },
+  {
+    id: 7,
+    title: "User Manual",
+    desc: "Operate, calibrate and maintain the robotic arm.",
+    icon: BookOpen,
+  },
+  {
+    id: 8,
+    title: "FAQs",
+    desc: "Answers to the most common questions from students.",
+    icon: Sparkles,
+  },
+  {
+    id: 9,
+    title: "Demonstration Summary",
+    desc: "Recap the complete pick-and-sort demonstration.",
+    icon: Radar,
+  },
+  {
+    id: 10,
+    title: "Post-Evaluation",
+    desc: "Complete the Post-Test to measure what you've learned.",
+    icon: Trophy,
+  },
 ];
 
 function LearningJourney() {
@@ -512,7 +598,10 @@ function LearningJourney() {
               const Icon = step.icon;
               const isRight = i % 2 === 1;
               return (
-                <div key={step.id} className="relative grid grid-cols-1 items-center gap-6 md:grid-cols-2">
+                <div
+                  key={step.id}
+                  className="relative grid grid-cols-1 items-center gap-6 md:grid-cols-2"
+                >
                   {/* Dot */}
                   <motion.div
                     initial={{ scale: 0 }}
@@ -524,9 +613,13 @@ function LearningJourney() {
                     <Icon className="h-5 w-5" />
                   </motion.div>
 
-                  <div className={`pl-16 md:pl-0 ${isRight ? "md:col-start-2 md:pl-16" : "md:pr-16 md:text-right"}`}>
+                  <div
+                    className={`pl-16 md:pl-0 ${isRight ? "md:col-start-2 md:pl-16" : "md:pr-16 md:text-right"}`}
+                  >
                     <Reveal y={20}>
-                      <div className={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground ${isRight ? "" : "md:justify-end md:w-full"}`}>
+                      <div
+                        className={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground ${isRight ? "" : "md:justify-end md:w-full"}`}
+                      >
                         <span className="rounded-full bg-accent px-2.5 py-0.5">Step {step.id}</span>
                       </div>
                       <h3 className="mt-3 text-2xl font-bold sm:text-3xl">{step.title}</h3>
@@ -544,14 +637,16 @@ function LearningJourney() {
         <div className="mt-24 rounded-3xl glass p-10 shadow-soft">
           <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-brand">Step 1</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-brand">
+                Step 1
+              </span>
               <h3 className="mt-2 text-3xl font-bold sm:text-4xl">Begin with the Pre-Test</h3>
               <p className="mt-3 max-w-2xl text-muted-foreground">
                 Before we dive in, answer a short Pre-Test so we can measure how much you'll grow
                 through this learning session.
               </p>
             </div>
-            <MagneticButton as="a" href="#" >
+            <MagneticButton as="a" href="https://forms.gle/DcyKiAgZfFmZqwfdA">
               Take Pre-Test
               <ArrowRight className="h-4 w-4" />
             </MagneticButton>
@@ -579,14 +674,15 @@ function WhatIsIoTrack() {
             </Reveal>
             <Reveal delay={0.1}>
               <h2 className="mt-5 text-4xl font-bold sm:text-5xl md:text-6xl">
-                An IoT-powered <span className="text-gradient-brand">learning kit</span> built to teach by doing.
+                An IoT-powered <span className="text-gradient-brand">learning kit</span> built to
+                teach by doing.
               </h2>
             </Reveal>
             <Reveal delay={0.2}>
               <p className="mt-5 text-lg text-muted-foreground">
-                IoTrack combines a color-sensing robotic arm with a companion learning
-                website to help students see abstract IoT concepts come alive — from
-                sensor readings to physical actuation.
+                IoTrack combines a color-sensing robotic arm with a companion learning website to
+                help students see abstract IoT concepts come alive — from sensor readings to
+                physical actuation.
               </p>
             </Reveal>
 
@@ -626,12 +722,48 @@ function WhatIsIoTrack() {
 // -----------------------------------------------------------------------------
 
 const CONCEPTS = [
-  { title: "Internet of Things", icon: Wifi, blurb: "A network of physical devices that sense, communicate and act.", detail: "IoT devices collect real-world data through sensors and exchange it over the internet, enabling automation and remote intelligence." },
-  { title: "Sensors", icon: Radar, blurb: "Devices that convert physical phenomena into digital signals.", detail: "IoTrack uses a color sensor that reads RGB values from a block's surface and reports them to the microcontroller." },
-  { title: "Microcontrollers", icon: Cpu, blurb: "Tiny computers that run the logic of an IoT device.", detail: "The ESP32 is the brain of IoTrack — it reads the sensor, decides what to do, and drives the servos of the arm." },
-  { title: "Communication", icon: Radio, blurb: "How devices talk to each other and to the cloud.", detail: "The ESP32 supports Wi-Fi and Bluetooth, allowing IoTrack to be monitored and updated wirelessly." },
-  { title: "Automation", icon: Cog, blurb: "Turning sensor data into physical action, hands-free.", detail: "When the sensor detects a color, the arm autonomously picks and places the block in its designated area." },
-  { title: "Robotics", icon: Bot, blurb: "Mechanical systems that perform tasks in the physical world.", detail: "IoTrack's arm uses servo motors and a gripper to demonstrate a real pick-and-place robotic workflow." },
+  {
+    title: "Internet of Things",
+    icon: Wifi,
+    blurb: "A network of physical devices that sense, communicate and act.",
+    detail:
+      "IoT devices collect real-world data through sensors and exchange it over the internet, enabling automation and remote intelligence.",
+  },
+  {
+    title: "Sensors",
+    icon: Radar,
+    blurb: "Devices that convert physical phenomena into digital signals.",
+    detail:
+      "IoTrack uses a color sensor that reads RGB values from a block's surface and reports them to the microcontroller.",
+  },
+  {
+    title: "Microcontrollers",
+    icon: Cpu,
+    blurb: "Tiny computers that run the logic of an IoT device.",
+    detail:
+      "The ESP32 is the brain of IoTrack — it reads the sensor, decides what to do, and drives the servos of the arm.",
+  },
+  {
+    title: "Communication",
+    icon: Radio,
+    blurb: "How devices talk to each other and to the cloud.",
+    detail:
+      "The ESP32 supports Wi-Fi and Bluetooth, allowing IoTrack to be monitored and updated wirelessly.",
+  },
+  {
+    title: "Automation",
+    icon: Cog,
+    blurb: "Turning sensor data into physical action, hands-free.",
+    detail:
+      "When the sensor detects a color, the arm autonomously picks and places the block in its designated area.",
+  },
+  {
+    title: "Robotics",
+    icon: Bot,
+    blurb: "Mechanical systems that perform tasks in the physical world.",
+    detail:
+      "IoTrack's arm uses servo motors and a gripper to demonstrate a real pick-and-place robotic workflow.",
+  },
 ];
 
 function IoTConcepts() {
@@ -640,7 +772,11 @@ function IoTConcepts() {
     <section className="relative overflow-hidden py-32">
       <BlobsBackground />
       <div className="relative mx-auto max-w-7xl px-6">
-        <SectionHeader eyebrow="Step 3 · Core Concepts" title="The IoT ideas that power IoTrack" description="Tap any card to expand and learn how each concept comes to life inside the kit." />
+        <SectionHeader
+          eyebrow="Step 3 · Core Concepts"
+          title="The IoT ideas that power IoTrack"
+          description="Tap any card to expand and learn how each concept comes to life inside the kit."
+        />
         <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CONCEPTS.map((c, i) => {
             const Icon = c.icon;
@@ -694,14 +830,54 @@ function IoTConcepts() {
 // -----------------------------------------------------------------------------
 
 const COMPONENTS = [
-  { name: "ESP32", icon: Cpu, desc: "Wi-Fi + Bluetooth microcontroller — the brain.", func: "Reads sensor data and drives servo motors in real time." },
-  { name: "Servo Motors", icon: Cog, desc: "Precise angular motors for each joint.", func: "Move the base, elbow, wrist and gripper of the robotic arm." },
-  { name: "Color Sensor", icon: ScanLine, desc: "RGB color detector positioned above the pick area.", func: "Identifies each block's color to determine its destination." },
-  { name: "Power Supply", icon: Battery, desc: "Regulated 5V supply for stable operation.", func: "Feeds both the ESP32 and the servo motors safely." },
-  { name: "Breadboard", icon: CircuitBoard, desc: "Solderless prototyping platform.", func: "Hosts the wiring between the ESP32, sensor and power rails." },
-  { name: "Jumper Wires", icon: Cable, desc: "Flexible connectors in multiple colors.", func: "Route signals and power between the components." },
-  { name: "Robot Arm Frame", icon: Bot, desc: "Rigid mechanical chassis with articulated joints.", func: "Provides the structure the servos and gripper attach to." },
-  { name: "Gripper", icon: Hand, desc: "Two-finger claw at the end of the arm.", func: "Grasps and releases the color-coded blocks." },
+  {
+    name: "ESP32",
+    icon: Cpu,
+    desc: "Wi-Fi + Bluetooth microcontroller — the brain.",
+    func: "Reads sensor data and drives servo motors in real time.",
+  },
+  {
+    name: "Servo Motors",
+    icon: Cog,
+    desc: "Precise angular motors for each joint.",
+    func: "Move the base, elbow, wrist and gripper of the robotic arm.",
+  },
+  {
+    name: "Color Sensor",
+    icon: ScanLine,
+    desc: "RGB color detector positioned above the pick area.",
+    func: "Identifies each block's color to determine its destination.",
+  },
+  {
+    name: "Power Supply",
+    icon: Battery,
+    desc: "Regulated 5V supply for stable operation.",
+    func: "Feeds both the ESP32 and the servo motors safely.",
+  },
+  {
+    name: "Breadboard",
+    icon: CircuitBoard,
+    desc: "Solderless prototyping platform.",
+    func: "Hosts the wiring between the ESP32, sensor and power rails.",
+  },
+  {
+    name: "Jumper Wires",
+    icon: Cable,
+    desc: "Flexible connectors in multiple colors.",
+    func: "Route signals and power between the components.",
+  },
+  {
+    name: "Robot Arm Frame",
+    icon: Bot,
+    desc: "Rigid mechanical chassis with articulated joints.",
+    func: "Provides the structure the servos and gripper attach to.",
+  },
+  {
+    name: "Gripper",
+    icon: Hand,
+    desc: "Two-finger claw at the end of the arm.",
+    func: "Grasps and releases the color-coded blocks.",
+  },
 ];
 
 function ComponentsSection() {
@@ -731,7 +907,9 @@ function ComponentsSection() {
                   <h3 className="text-lg font-bold">{c.name}</h3>
                   <p className="mt-1.5 text-sm text-muted-foreground">{c.desc}</p>
                   <div className="mt-4 border-t border-border/50 pt-4">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-brand">Function</div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-brand">
+                      Function
+                    </div>
                     <p className="mt-1 text-sm text-foreground/80">{c.func}</p>
                   </div>
                 </motion.div>
@@ -749,15 +927,31 @@ function ComponentsSection() {
 // -----------------------------------------------------------------------------
 
 const ARM_STEPS = [
-  { t: "Initialize System", d: "ESP32 boots and calibrates every servo to its home position.", icon: Zap },
+  {
+    t: "Initialize System",
+    d: "ESP32 boots and calibrates every servo to its home position.",
+    icon: Zap,
+  },
   { t: "Detect Block", d: "The arm scans the pickup zone for a new block.", icon: Radar },
-  { t: "Scan Block Color", d: "The color sensor reads the RGB values of the block's surface.", icon: ScanLine },
+  {
+    t: "Scan Block Color",
+    d: "The color sensor reads the RGB values of the block's surface.",
+    icon: ScanLine,
+  },
   { t: "Process Detection", d: "The controller decides where this color should go.", icon: Cpu },
   { t: "Move Arm", d: "Servos rotate to align the gripper above the block.", icon: Move3d },
-  { t: "Pick Block", d: "The gripper closes and lifts the block from the pickup area.", icon: Hand },
+  {
+    t: "Pick Block",
+    d: "The gripper closes and lifts the block from the pickup area.",
+    icon: Hand,
+  },
   { t: "Rotate Arm", d: "The base rotates toward the designated color area.", icon: RotateCw },
   { t: "Move to Correct Area", d: "The arm extends to the correct drop zone.", icon: MapPin },
-  { t: "Release Block", d: "The gripper opens and places the block precisely.", icon: CheckCircle2 },
+  {
+    t: "Release Block",
+    d: "The gripper opens and places the block precisely.",
+    icon: CheckCircle2,
+  },
   { t: "Return to Default Position", d: "The arm returns to its idle home pose.", icon: Bot },
   { t: "Ready for Next Block", d: "System waits for the next detection cycle.", icon: Sparkles },
 ];
@@ -794,7 +988,12 @@ function RoboticArmWorkflow() {
           <div className="relative">
             <div className="absolute left-6 top-0 h-full w-px bg-border" />
             <motion.div
-              style={{ height: useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "100%"]), { stiffness: 60, damping: 20 }) }}
+              style={{
+                height: useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "100%"]), {
+                  stiffness: 60,
+                  damping: 20,
+                }),
+              }}
               className="absolute left-6 top-0 w-px bg-gradient-brand"
             />
             <div className="space-y-8">
@@ -811,7 +1010,9 @@ function RoboticArmWorkflow() {
                       </motion.div>
                       <div className="rounded-2xl glass p-5 transition-all hover:shadow-glow">
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-bold text-brand">{String(i + 1).padStart(2, "0")}</span>
+                          <span className="text-xs font-bold text-brand">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
                           <h3 className="text-xl font-bold">{s.t}</h3>
                         </div>
                         <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
@@ -895,13 +1096,34 @@ function AssemblyGuide() {
 // -----------------------------------------------------------------------------
 
 const MANUAL = [
-  { t: "Getting Started", d: "Unbox the kit, verify components against the parts list, and place the arm on a stable surface with room to move." },
-  { t: "Powering On", d: "Connect the regulated 5V supply. The ESP32's onboard LED will light up and the arm will home to its default position." },
-  { t: "Running Demonstration", d: "Place a color block in the pickup zone. IoTrack will scan, decide, pick and sort it into its matching drop area." },
-  { t: "Sensor Calibration", d: "Use the calibration routine to teach the sensor each color under the current lighting conditions before demos." },
-  { t: "Maintenance", d: "Keep the servos free of dust, tighten screws periodically, and check wire connections before every session." },
-  { t: "Troubleshooting", d: "If the arm doesn't move, verify power. If colors are misread, recalibrate the sensor and reduce ambient glare." },
-  { t: "Safety", d: "Keep fingers clear of the gripper during motion. Always power off before rewiring or removing components." },
+  {
+    t: "Getting Started",
+    d: "Unbox the kit, verify components against the parts list, and place the arm on a stable surface with room to move.",
+  },
+  {
+    t: "Powering On",
+    d: "Connect the regulated 5V supply. The ESP32's onboard LED will light up and the arm will home to its default position.",
+  },
+  {
+    t: "Running Demonstration",
+    d: "Place a color block in the pickup zone. IoTrack will scan, decide, pick and sort it into its matching drop area.",
+  },
+  {
+    t: "Sensor Calibration",
+    d: "Use the calibration routine to teach the sensor each color under the current lighting conditions before demos.",
+  },
+  {
+    t: "Maintenance",
+    d: "Keep the servos free of dust, tighten screws periodically, and check wire connections before every session.",
+  },
+  {
+    t: "Troubleshooting",
+    d: "If the arm doesn't move, verify power. If colors are misread, recalibrate the sensor and reduce ambient glare.",
+  },
+  {
+    t: "Safety",
+    d: "Keep fingers clear of the gripper during motion. Always power off before rewiring or removing components.",
+  },
 ];
 
 function UserManual() {
@@ -964,12 +1186,30 @@ function UserManual() {
 // -----------------------------------------------------------------------------
 
 const FAQS = [
-  { q: "What is IoTrack?", a: "IoTrack is an IoT-powered educational kit that pairs a color-sensing robotic arm with a companion learning website to teach IoT and robotics concepts through hands-on demonstration." },
-  { q: "How does color detection work?", a: "A color sensor above the pickup zone reads RGB values of the block's surface. The ESP32 interprets those values and maps them to a specific drop area." },
-  { q: "How does the robotic arm move?", a: "Servo motors at each joint receive angle commands from the ESP32. Coordinated movements produce base rotation, elbow flexion, wrist tilt and gripper actuation." },
-  { q: "How does ESP32 communicate?", a: "The ESP32 has built-in Wi-Fi and Bluetooth. For IoTrack it can be extended to publish sensor readings or receive commands wirelessly." },
-  { q: "How do I calibrate the sensor?", a: "Run the calibration routine with each reference block under the room's current lighting so the sensor learns the RGB ranges it should map to each color." },
-  { q: "How do I maintain the robotic arm?", a: "Keep the servos clean, retighten mounting screws periodically, inspect the wiring before each session, and store the kit in a dry environment." },
+  {
+    q: "What is IoTrack?",
+    a: "IoTrack is an IoT-powered educational kit that pairs a color-sensing robotic arm with a companion learning website to teach IoT and robotics concepts through hands-on demonstration.",
+  },
+  {
+    q: "How does color detection work?",
+    a: "A color sensor above the pickup zone reads RGB values of the block's surface. The ESP32 interprets those values and maps them to a specific drop area.",
+  },
+  {
+    q: "How does the robotic arm move?",
+    a: "Servo motors at each joint receive angle commands from the ESP32. Coordinated movements produce base rotation, elbow flexion, wrist tilt and gripper actuation.",
+  },
+  {
+    q: "How does ESP32 communicate?",
+    a: "The ESP32 has built-in Wi-Fi and Bluetooth. For IoTrack it can be extended to publish sensor readings or receive commands wirelessly.",
+  },
+  {
+    q: "How do I calibrate the sensor?",
+    a: "Run the calibration routine with each reference block under the room's current lighting so the sensor learns the RGB ranges it should map to each color.",
+  },
+  {
+    q: "How do I maintain the robotic arm?",
+    a: "Keep the servos clean, retighten mounting screws periodically, inspect the wiring before each session, and store the kit in a dry environment.",
+  },
 ];
 
 function FAQs() {
@@ -993,7 +1233,10 @@ function FAQs() {
                     className="flex w-full items-center justify-between gap-4 p-5 text-left"
                   >
                     <span className="text-lg font-semibold">{f.q}</span>
-                    <motion.span animate={{ rotate: isOpen ? 45 : 0 }} className="grid h-8 w-8 place-items-center rounded-full bg-accent">
+                    <motion.span
+                      animate={{ rotate: isOpen ? 45 : 0 }}
+                      className="grid h-8 w-8 place-items-center rounded-full bg-accent"
+                    >
                       <span className="text-xl leading-none">+</span>
                     </motion.span>
                   </button>
@@ -1072,7 +1315,10 @@ function DemoSummary() {
                     transition={{ delay: i * 0.1 + 0.2 }}
                     className="hidden text-muted-foreground md:block"
                   >
-                    <motion.div animate={{ x: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                    <motion.div
+                      animate={{ x: [0, 6, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
                       <ArrowRight className="h-5 w-5" />
                     </motion.div>
                   </motion.div>
@@ -1125,17 +1371,22 @@ function PostEvaluation() {
         </Reveal>
         <Reveal delay={0.2}>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            You have completed the IoTrack Learning Session. Please answer the Post-Test
-            and Evaluation Form so we can measure your growth and improve the kit.
+            You have completed the IoTrack Learning Session. Please answer the Post-Test and
+            Evaluation Form so we can measure your growth and improve the kit.
           </p>
         </Reveal>
         <Reveal delay={0.3}>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <MagneticButton as="a" href="#">
+            <MagneticButton as="a" href="https://forms.gle/hQo4p9bneBuRinpq6">
               Take Post-Test / Evaluation
               <ArrowRight className="h-4 w-4" />
             </MagneticButton>
-            <MagneticButton variant="ghost" onClick={() => document.getElementById("home")?.scrollIntoView({ behavior: "smooth" })}>
+            <MagneticButton
+              variant="ghost"
+              onClick={() =>
+                document.getElementById("home")?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
               Back to Top
             </MagneticButton>
           </div>
@@ -1167,7 +1418,9 @@ function Footer() {
             </p>
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Project</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Project
+            </div>
             <ul className="mt-4 space-y-2 text-sm">
               <li>Research Project</li>
               <li>University Name</li>
@@ -1176,10 +1429,16 @@ function Footer() {
             </ul>
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Contact</div>
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Contact
+            </div>
             <ul className="mt-4 space-y-2 text-sm">
-              <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand" /> iotrack@university.edu</li>
-              <li className="flex items-center gap-2"><Github className="h-4 w-4 text-brand" /> github.com/iotrack</li>
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-brand" /> iotrack@university.edu
+              </li>
+              <li className="flex items-center gap-2">
+                <Github className="h-4 w-4 text-brand" /> github.com/iotrack
+              </li>
             </ul>
           </div>
         </div>
@@ -1231,7 +1490,9 @@ function IoTrackPage() {
       </main>
       <Footer />
       {/* Silence unused warning for design-system Button import */}
-      <span className="hidden"><Button>_</Button></span>
+      <span className="hidden">
+        <Button>_</Button>
+      </span>
     </div>
   );
 }
