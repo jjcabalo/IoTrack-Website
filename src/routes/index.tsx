@@ -1278,7 +1278,57 @@ const SUMMARY = [
   { t: "Ready Again", icon: Sparkles },
 ];
 
+const TRIPLE_SUMMARY = [...SUMMARY, ...SUMMARY, ...SUMMARY];
+
 function DemoSummary() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    let animId: number;
+    const speed = 0.8; // scrolling speed (pixels per frame, slightly faster but readable)
+    let isHovered = false;
+    let scrollPos = el.scrollLeft;
+
+    const tick = () => {
+      if (!isHovered && el.scrollWidth > el.clientWidth) {
+        const oneSetWidth = el.scrollWidth / 3;
+        scrollPos = scrollPos + speed;
+
+        if (scrollPos >= oneSetWidth) {
+          scrollPos = scrollPos % oneSetWidth;
+        }
+
+        el.scrollLeft = Math.round(scrollPos);
+      } else {
+        // Keep scrollPos synchronized if user manually scrolls/drags
+        const oneSetWidth = el.scrollWidth / 3;
+        scrollPos = el.scrollLeft % oneSetWidth;
+      }
+      animId = requestAnimationFrame(tick);
+    };
+
+    const handleMouseEnter = () => {
+      isHovered = true;
+    };
+    const handleMouseLeave = () => {
+      isHovered = false;
+    };
+
+    el.addEventListener("mouseenter", handleMouseEnter);
+    el.addEventListener("mouseleave", handleMouseLeave);
+
+    animId = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      el.removeEventListener("mouseenter", handleMouseEnter);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
   return (
     <section className="relative overflow-hidden py-32">
       <BlobsBackground />
@@ -1288,12 +1338,21 @@ function DemoSummary() {
           title="The complete pick-and-sort loop"
           description="A recap of the routine you just watched — one continuous animated flow."
         />
-        <div className="mt-20 flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-center md:overflow-x-auto md:pb-4">
-          {SUMMARY.map((s, i) => {
+        <div
+          ref={scrollRef}
+          className="scrollbar-none md:mask-fade-edges mt-20 flex flex-col items-stretch gap-4 py-8 md:flex-row md:items-center md:overflow-x-auto"
+          style={{ scrollBehavior: "auto" }}
+        >
+          {TRIPLE_SUMMARY.map((s, i) => {
             const Icon = s.icon;
             return (
-              <div key={s.t} className="flex flex-col items-center gap-4 md:flex-row">
-                <Reveal delay={i * 0.1} y={20}>
+              <div
+                key={i}
+                className={`flex shrink-0 flex-col items-center gap-4 md:flex-row ${
+                  i >= SUMMARY.length ? "hidden md:flex" : ""
+                }`}
+              >
+                <Reveal delay={(i % SUMMARY.length) * 0.1} y={20} className="shrink-0">
                   <motion.div
                     whileHover={{ y: -6, scale: 1.05 }}
                     className="flex w-52 flex-col items-center gap-3 rounded-2xl glass p-5 text-center shadow-soft transition-all hover:shadow-glow"
@@ -1303,17 +1362,17 @@ function DemoSummary() {
                     </div>
                     <div className="text-sm font-semibold">{s.t}</div>
                     <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                      {String(i + 1).padStart(2, "0")}
+                      {String((i % SUMMARY.length) + 1).padStart(2, "0")}
                     </div>
                   </motion.div>
                 </Reveal>
-                {i < SUMMARY.length - 1 && (
+                {i < TRIPLE_SUMMARY.length - 1 && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 + 0.2 }}
-                    className="hidden text-muted-foreground md:block"
+                    transition={{ delay: (i % SUMMARY.length) * 0.1 + 0.2 }}
+                    className="hidden shrink-0 text-muted-foreground md:block"
                   >
                     <motion.div
                       animate={{ x: [0, 6, 0] }}
@@ -1414,9 +1473,10 @@ function Footer() {
               <span className="text-gradient-brand">IoTrack</span>
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              An integrated, IoT-based educational learning kit designed to introduce students to fundamental Internet of Things concepts. Instead of functioning
-              purely as isolated hardware, it combines a physical tool with a digital resource to
-              create a unified learning platform.
+              An integrated, IoT-based educational learning kit designed to introduce students to
+              fundamental Internet of Things concepts. Instead of functioning purely as isolated
+              hardware, it combines a physical tool with a digital resource to create a unified
+              learning platform.
             </p>
             <div className="pt-2">
               <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -1476,8 +1536,8 @@ function Footer() {
               <li>
                 <div className="font-semibold text-foreground">Accessible STEM Tool</div>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  Delivers a learner-centered solution designed to prepare students
-                  for future digital environments.
+                  Delivers a learner-centered solution designed to prepare students for future
+                  digital environments.
                 </p>
               </li>
             </ul>
