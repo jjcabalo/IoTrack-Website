@@ -741,14 +741,14 @@ const CONCEPTS = [
   {
     title: "Microcontrollers",
     icon: Cpu,
-    blurb: "Tiny computers that run the logic of an IoT device.",
+    blurb: "A compact, low-power \"computer-on-a-chip\" embedded inside devices.",
     detail:
       "The ESP32 is the brain of IoTrack — it reads the sensor, decides what to do, and drives the servos of the arm.",
   },
   {
     title: "Communication",
     icon: Radio,
-    blurb: "How devices talk to each other and to the cloud.",
+    blurb: "How devices talk and execute tasks without human intervention to each other and to the cloud.",
     detail:
       "The ESP32 supports Wi-Fi and Bluetooth, allowing IoTrack to be monitored and updated wirelessly.",
   },
