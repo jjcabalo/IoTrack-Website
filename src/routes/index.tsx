@@ -741,14 +741,15 @@ const CONCEPTS = [
   {
     title: "Microcontrollers",
     icon: Cpu,
-    blurb: "A compact, low-power \"computer-on-a-chip\" embedded inside devices.",
+    blurb: 'A compact, low-power "computer-on-a-chip" embedded inside devices.',
     detail:
       "The ESP32 is the brain of IoTrack — it reads the sensor, decides what to do, and drives the servos of the arm.",
   },
   {
     title: "Communication",
     icon: Radio,
-    blurb: "How devices talk and execute tasks without human intervention to each other and to the cloud.",
+    blurb:
+      "How devices talk and execute tasks without human intervention to each other and to the cloud.",
     detail:
       "The ESP32 supports Wi-Fi and Bluetooth, allowing IoTrack to be monitored and updated wirelessly.",
   },
@@ -1195,16 +1196,16 @@ void loop() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-black/30 text-left font-mono shadow-soft">
+    <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-background/60 dark:bg-black/30 text-left font-mono shadow-soft">
       {/* Clipboard Header */}
-      <div className="flex items-center justify-between border-b border-border/40 bg-black/20 px-5 py-3 text-xs text-muted-foreground">
+      <div className="flex items-center justify-between border-b border-border/40 bg-background/80 dark:bg-black/20 px-5 py-3 text-xs text-muted-foreground">
         <span className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-brand" />
           <span>calibration.ino</span>
         </span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 rounded-lg border border-border/40 bg-background/5 px-2.5 py-1 text-xs font-semibold text-muted-foreground transition-all hover:bg-background/10 hover:text-foreground active:scale-95 cursor-pointer"
+          className="flex items-center gap-1.5 rounded-lg border border-border/40 bg-background/10 dark:bg-background/5 px-2.5 py-1 text-xs font-semibold text-muted-foreground transition-all hover:bg-background/20 dark:hover:bg-background/10 hover:text-foreground dark:hover:text-foreground active:scale-95 cursor-pointer"
         >
           {copied ? (
             <>
@@ -1221,104 +1222,131 @@ void loop() {
       </div>
 
       {/* Code Area */}
-      <div className="overflow-x-auto p-5 text-xs leading-relaxed text-foreground/90 selection:bg-brand/30">
+      <div className="overflow-x-auto p-5 text-xs leading-relaxed text-zinc-800 dark:text-foreground/90 selection:bg-brand/30">
         <pre className="scrollbar-none">
           <code>
-            <span className="text-brand">#include</span>{" "}
-            <span className="text-brand-2">&lt;Servo.h&gt;</span>
+            <span className="text-purple-600 dark:text-brand">#include</span>{" "}
+            <span className="text-emerald-600 dark:text-brand-2">&lt;Servo.h&gt;</span>
             {"\n\n"}
-            <span className="text-muted-foreground">// Define Servo Objects</span>
+            <span className="text-zinc-500 dark:text-muted-foreground">
+              // Define Servo Objects
+            </span>
             {"\n"}
-            <span className="text-brand">Servo</span> baseServo;{"\n"}
-            <span className="text-brand">Servo</span> shoulderServo;{"\n"}
-            <span className="text-brand">Servo</span> elbowServo;{"\n"}
-            <span className="text-brand">Servo</span> gripperServo;{"\n\n"}
-            <span className="text-muted-foreground">// Pin Configurations</span>
+            <span className="text-purple-600 dark:text-brand">Servo</span> baseServo;{"\n"}
+            <span className="text-purple-600 dark:text-brand">Servo</span> shoulderServo;{"\n"}
+            <span className="text-purple-600 dark:text-brand">Servo</span> elbowServo;{"\n"}
+            <span className="text-purple-600 dark:text-brand">Servo</span> gripperServo;{"\n\n"}
+            <span className="text-zinc-500 dark:text-muted-foreground">// Pin Configurations</span>
             {"\n"}
-            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
-            BASE_PIN = <span className="text-cyan-400">3</span>;{"\n"}
-            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
-            SHOULDER_PIN = <span className="text-cyan-400">5</span>;{"\n"}
-            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
-            ELBOW_PIN = <span className="text-cyan-400">6</span>;{"\n"}
-            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
-            GRIPPER_PIN = <span className="text-cyan-400">9</span>;{"\n\n"}
-            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
-            JOY_X1 = <span className="text-cyan-400">A0</span>;{" "}
-            <span className="text-muted-foreground">// Base Control</span>
+            <span className="text-purple-600 dark:text-brand">const</span>{" "}
+            <span className="text-blue-600 dark:text-blue-400">int</span> BASE_PIN ={" "}
+            <span className="text-amber-600 dark:text-cyan-400">3</span>;{"\n"}
+            <span className="text-purple-600 dark:text-brand">const</span>{" "}
+            <span className="text-blue-600 dark:text-blue-400">int</span> SHOULDER_PIN ={" "}
+            <span className="text-amber-600 dark:text-cyan-400">5</span>;{"\n"}
+            <span className="text-purple-600 dark:text-brand">const</span>{" "}
+            <span className="text-blue-600 dark:text-blue-400">int</span> ELBOW_PIN ={" "}
+            <span className="text-amber-600 dark:text-cyan-400">6</span>;{"\n"}
+            <span className="text-purple-600 dark:text-brand">const</span>{" "}
+            <span className="text-blue-600 dark:text-blue-400">int</span> GRIPPER_PIN ={" "}
+            <span className="text-amber-600 dark:text-cyan-400">9</span>;{"\n\n"}
+            <span className="text-purple-600 dark:text-brand">const</span>{" "}
+            <span className="text-blue-600 dark:text-blue-400">int</span> JOY_X1 ={" "}
+            <span className="text-amber-600 dark:text-cyan-400">A0</span>;{" "}
+            <span className="text-zinc-500 dark:text-muted-foreground">// Base Control</span>
             {"\n"}
-            <span className="text-brand">const</span> <span className="text-blue-400">int</span>{" "}
-            JOY_Y1 = <span className="text-cyan-400">A1</span>;{" "}
-            <span className="text-muted-foreground">// Shoulder Control</span>
+            <span className="text-purple-600 dark:text-brand">const</span>{" "}
+            <span className="text-blue-600 dark:text-blue-400">int</span> JOY_Y1 ={" "}
+            <span className="text-amber-600 dark:text-cyan-400">A1</span>;{" "}
+            <span className="text-zinc-500 dark:text-muted-foreground">// Shoulder Control</span>
             {"\n\n"}
-            <span className="text-blue-400">void</span>{" "}
-            <span className="text-purple-400 font-semibold">setup</span>() &#123;{"\n"}
-            <span className="text-muted-foreground"> // Attach servos to respective PWM pins</span>
+            <span className="text-blue-600 dark:text-blue-400">void</span>{" "}
+            <span className="text-fuchsia-600 dark:text-purple-400 font-semibold">setup</span>()
+            &#123;{"\n"}
+            <span className="text-zinc-500 dark:text-muted-foreground">
+              {" "}
+              // Attach servos to respective PWM pins
+            </span>
             {"\n"}
-            {"  "}baseServo.<span className="text-purple-400">attach</span>(BASE_PIN);{"\n"}
-            {"  "}shoulderServo.<span className="text-purple-400">attach</span>(SHOULDER_PIN);{"\n"}
-            {"  "}elbowServo.<span className="text-purple-400">attach</span>(ELBOW_PIN);{"\n"}
-            {"  "}gripperServo.<span className="text-purple-400">attach</span>(GRIPPER_PIN);{"\n\n"}
-            <span className="text-muted-foreground">
+            {"  "}baseServo.<span className="text-fuchsia-600 dark:text-purple-400">attach</span>
+            (BASE_PIN);{"\n"}
+            {"  "}shoulderServo.
+            <span className="text-fuchsia-600 dark:text-purple-400">attach</span>(SHOULDER_PIN);
+            {"\n"}
+            {"  "}elbowServo.<span className="text-fuchsia-600 dark:text-purple-400">attach</span>
+            (ELBOW_PIN);{"\n"}
+            {"  "}gripperServo.<span className="text-fuchsia-600 dark:text-purple-400">attach</span>
+            (GRIPPER_PIN);{"\n\n"}
+            <span className="text-zinc-500 dark:text-muted-foreground">
               {" "}
               // Calibration Safe-State: Force all servos to mid-points
             </span>
             {"\n"}
-            {"  "}baseServo.<span className="text-purple-400">write</span>(
-            <span className="text-cyan-400">90</span>);{"\n"}
-            {"  "}shoulderServo.<span className="text-purple-400">write</span>(
-            <span className="text-cyan-400">90</span>);{"\n"}
-            {"  "}elbowServo.<span className="text-purple-400">write</span>(
-            <span className="text-cyan-400">90</span>);{"\n"}
-            {"  "}gripperServo.<span className="text-purple-400">write</span>(
-            <span className="text-cyan-400">90</span>);{"\n\n"}
+            {"  "}baseServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>(
+            <span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n"}
+            {"  "}shoulderServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>
+            (<span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n"}
+            {"  "}elbowServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>(
+            <span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n"}
+            {"  "}gripperServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>(
+            <span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n\n"}
             {"  "}
-            <span className="text-purple-400">delay</span>(
-            <span className="text-cyan-400">2000</span>);{" "}
-            <span className="text-muted-foreground">
+            <span className="text-fuchsia-600 dark:text-purple-400">delay</span>(
+            <span className="text-amber-600 dark:text-cyan-400">2000</span>);{" "}
+            <span className="text-zinc-500 dark:text-muted-foreground">
               // Wait 2 seconds for mechanical alignment
             </span>
             {"\n"}
             &#125;{"\n\n"}
-            <span className="text-blue-400">void</span>{" "}
-            <span className="text-purple-400 font-semibold">loop</span>() &#123;{"\n"}
-            <span className="text-muted-foreground">
+            <span className="text-blue-600 dark:text-blue-400">void</span>{" "}
+            <span className="text-fuchsia-600 dark:text-purple-400 font-semibold">loop</span>()
+            &#123;{"\n"}
+            <span className="text-zinc-500 dark:text-muted-foreground">
               {" "}
               // Read joystick input values (0 to 1023)
             </span>
             {"\n"}
             {"  "}
-            <span className="text-blue-400">int</span> valX ={" "}
-            <span className="text-purple-400">analogRead</span>(JOY_X1);{"\n"}
+            <span className="text-blue-600 dark:text-blue-400">int</span> valX ={" "}
+            <span className="text-fuchsia-600 dark:text-purple-400">analogRead</span>(JOY_X1);{"\n"}
             {"  "}
-            <span className="text-blue-400">int</span> valY ={" "}
-            <span className="text-purple-400">analogRead</span>(JOY_Y1);{"\n\n"}
-            <span className="text-muted-foreground">
+            <span className="text-blue-600 dark:text-blue-400">int</span> valY ={" "}
+            <span className="text-fuchsia-600 dark:text-purple-400">analogRead</span>(JOY_Y1);
+            {"\n\n"}
+            <span className="text-zinc-500 dark:text-muted-foreground">
               {" "}
               // Map analog inputs to safe operating angles
             </span>
             {"\n"}
             {"  "}
-            <span className="text-blue-400">int</span> targetBase ={" "}
-            <span className="text-purple-400">map</span>(valX,{" "}
-            <span className="text-cyan-400">0</span>, <span className="text-cyan-400">1023</span>,{" "}
-            <span className="text-cyan-400">10</span>, <span className="text-cyan-400">170</span>);
-            {"\n"}
+            <span className="text-blue-600 dark:text-blue-400">int</span> targetBase ={" "}
+            <span className="text-fuchsia-600 dark:text-purple-400">map</span>(valX,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">0</span>,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">1023</span>,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">10</span>,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">170</span>);{"\n"}
             {"  "}
-            <span className="text-blue-400">int</span> targetShoulder ={" "}
-            <span className="text-purple-400">map</span>(valY,{" "}
-            <span className="text-cyan-400">0</span>, <span className="text-cyan-400">1023</span>,{" "}
-            <span className="text-cyan-400">30</span>, <span className="text-cyan-400">150</span>);
-            {"\n\n"}
-            <span className="text-muted-foreground"> // Write smooth updates to actuators</span>
+            <span className="text-blue-600 dark:text-blue-400">int</span> targetShoulder ={" "}
+            <span className="text-fuchsia-600 dark:text-purple-400">map</span>(valY,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">0</span>,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">1023</span>,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">30</span>,{" "}
+            <span className="text-amber-600 dark:text-cyan-400">150</span>);{"\n\n"}
+            <span className="text-zinc-500 dark:text-muted-foreground">
+              {" "}
+              // Write smooth updates to actuators
+            </span>
             {"\n"}
-            {"  "}baseServo.<span className="text-purple-400">write</span>(targetBase);{"\n"}
-            {"  "}shoulderServo.<span className="text-purple-400">write</span>(targetShoulder);
-            {"\n\n"}
+            {"  "}baseServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>
+            (targetBase);{"\n"}
+            {"  "}shoulderServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>
+            (targetShoulder);{"\n\n"}
             {"  "}
-            <span className="text-purple-400">delay</span>(<span className="text-cyan-400">20</span>
-            );{" "}
-            <span className="text-muted-foreground">// Frequency delay stabilizing the loop</span>
+            <span className="text-fuchsia-600 dark:text-purple-400">delay</span>(
+            <span className="text-amber-600 dark:text-cyan-400">20</span>);{" "}
+            <span className="text-zinc-500 dark:text-muted-foreground">
+              // Frequency delay stabilizing the loop
+            </span>
             {"\n"}
             &#125;
           </code>
@@ -1640,6 +1668,334 @@ function DemoSummary() {
 }
 
 // -----------------------------------------------------------------------------
+// Robotic Arm Simulator (Step 9 Subsection)
+// -----------------------------------------------------------------------------
+
+function RoboticArmSimulator() {
+  const [baseRotation, setBaseRotation] = useState(90);
+  const [shoulderAngle, setShoulderAngle] = useState(45);
+  const [elbowAngle, setElbowAngle] = useState(90);
+  const [gripperClaws, setGripperClaws] = useState(50);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  // Kinematic parameters (Link lengths in cm)
+  const l1_cm = 15.0;
+  const l2_cm = 12.0;
+  const l3_cm = 3.0; // claw length
+  const base_h_cm = 5.0;
+
+  const radShoulder = (shoulderAngle * Math.PI) / 180;
+  const globalForearmAngle = shoulderAngle + elbowAngle - 90;
+  const radForearm = (globalForearmAngle * Math.PI) / 180;
+  const radBase = (baseRotation * Math.PI) / 180;
+
+  // Forward Kinematics Telemetry
+  const R = l1_cm * Math.cos(radShoulder) + (l2_cm + l3_cm) * Math.cos(radForearm);
+  const Z = l1_cm * Math.sin(radShoulder) + (l2_cm + l3_cm) * Math.sin(radForearm) + base_h_cm;
+  const X = R * Math.cos(radBase);
+  const Y = R * Math.sin(radBase);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw engineering grid background
+    ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.04)";
+    ctx.lineWidth = 1;
+    const gridSize = 25;
+    for (let x = 0; x < canvas.width; x += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+
+    // Kinematic pixel parameters for side-profile view
+    const x0 = canvas.width / 2;
+    const y0 = canvas.height - 50;
+    const baseW = 90;
+    const baseH = 30;
+
+    const L1_px = 100;
+    const L2_px = 80;
+    const L3_px = 25;
+
+    // Joint positions
+    const x1 = x0;
+    const y1 = y0; // Shoulder joint
+    const x2 = x1 + L1_px * Math.cos(radShoulder);
+    const y2 = y1 - L1_px * Math.sin(radShoulder); // Elbow joint
+    const x3 = x2 + L2_px * Math.cos(radForearm);
+    const y3 = y2 - L2_px * Math.sin(radForearm); // Wrist joint
+
+    // Draw coordinate axis in bottom-left corner
+    ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(40, canvas.height - 40);
+    ctx.lineTo(70, canvas.height - 40);
+    ctx.lineTo(65, canvas.height - 43);
+    ctx.moveTo(70, canvas.height - 40);
+    ctx.lineTo(65, canvas.height - 37);
+    ctx.moveTo(40, canvas.height - 40);
+    ctx.lineTo(40, canvas.height - 70);
+    ctx.lineTo(37, canvas.height - 65);
+    ctx.moveTo(40, canvas.height - 70);
+    ctx.lineTo(43, canvas.height - 65);
+    ctx.stroke();
+
+    ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.5)";
+    ctx.font = "10px monospace";
+    ctx.fillText("X", 75, canvas.height - 37);
+    ctx.fillText("Z", 37, canvas.height - 75);
+
+    // Draw Base
+    ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.04)";
+    ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.15)";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.roundRect(x0 - baseW / 2, y0, baseW, baseH, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // Draw Base Rotation Indicator (Gauge)
+    ctx.strokeStyle = isDark ? "rgba(236, 72, 153, 0.4)" : "rgba(236, 72, 153, 0.6)"; // brand pink
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(x0, y0 + baseH / 2, 18, Math.PI, 0);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x0, y0 + baseH / 2);
+    ctx.lineTo(x0 + 18 * Math.cos(radBase), y0 + baseH / 2 - 18 * Math.sin(radBase));
+    ctx.stroke();
+
+    // Draw Link 1 (Shoulder to Elbow)
+    ctx.strokeStyle = "oklch(0.6 0.22 265)"; // brand purple
+    ctx.lineWidth = 8;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    // Draw Link 2 (Elbow to Wrist)
+    ctx.strokeStyle = "oklch(0.7 0.2 320)"; // brand pink/fuchsia
+    ctx.lineWidth = 5.5;
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x3, y3);
+    ctx.stroke();
+
+    // Draw Joint Circles
+    ctx.fillStyle = "#ffffff";
+    ctx.strokeStyle = "oklch(0.6 0.22 265)";
+    ctx.lineWidth = 2;
+
+    // Shoulder joint
+    ctx.beginPath();
+    ctx.arc(x1, y1, 8, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+
+    // Elbow joint
+    ctx.beginPath();
+    ctx.arc(x2, y2, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+
+    // Draw Gripper Fingers (Claws)
+    const gripperRatio = gripperClaws / 100;
+    const spreadAngle = (22 * (1 - gripperRatio) * Math.PI) / 180;
+    const f1Angle = radForearm - spreadAngle;
+    const f2Angle = radForearm + spreadAngle;
+
+    const xf1 = x3 + L3_px * Math.cos(f1Angle);
+    const yf1 = y3 - L3_px * Math.sin(f1Angle);
+    const xf2 = x3 + L3_px * Math.cos(f2Angle);
+    const yf2 = y3 - L3_px * Math.sin(f2Angle);
+
+    ctx.strokeStyle = isDark ? "#ffffff" : "#1e1b4b";
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.moveTo(x3, y3);
+    ctx.lineTo(xf1, yf1);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x3, y3);
+    ctx.lineTo(xf2, yf2);
+    ctx.stroke();
+
+    // Joint Text Labels
+    ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.6)";
+    ctx.font = "9px monospace";
+    ctx.fillText("Base", x0 - baseW / 2 - 32, y0 + baseH / 2 + 3);
+    ctx.fillText("Shoulder", x1 + 14, y1 + 3);
+    ctx.fillText("Elbow", x2 + 12, y2 + 3);
+    ctx.fillText("Gripper", x3 + 12, y3 - 10);
+  }, [
+    baseRotation,
+    shoulderAngle,
+    elbowAngle,
+    gripperClaws,
+    radBase,
+    radForearm,
+    radShoulder,
+    isDark,
+  ]);
+
+  return (
+    <section
+      id="simulator"
+      className="relative overflow-hidden border-t border-border/50 py-24 bg-background/5"
+    >
+      <BlobsBackground />
+      <div className="relative mx-auto max-w-5xl px-6">
+        <SectionHeader
+          eyebrow="Interactive Simulation"
+          title="Robotic Arm Kinematics Simulator"
+          description="An educational workspace demonstrating real-time coordinate calculation. Adjust the joint angles below to simulate side-profile kinematics."
+        />
+
+        <div className="mt-16 rounded-3xl glass p-8 shadow-soft flex flex-col items-center">
+          {/* Canvas Viewport */}
+          <div className="relative overflow-hidden rounded-2xl border border-border/30 bg-background/50 dark:bg-black/40 p-4 shadow-soft flex flex-col items-center w-full max-w-lg">
+            <div className="absolute top-2 left-3 text-[9px] font-mono uppercase tracking-wider text-muted-foreground/60">
+            </div>
+            <canvas
+              ref={canvasRef}
+              width={500}
+              height={350}
+              className="w-full aspect-[500/350] bg-black/5 dark:bg-black/50 border border-border/10 rounded-xl mt-3"
+            />
+
+            {/* Live Telemetry Display */}
+            <div className="mt-6 w-full grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-border/20 pt-4 text-center">
+              <div className="rounded-xl bg-background/50 dark:bg-background/10 p-2 border border-border/20">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                  X Position
+                </div>
+                <div className="mt-1 text-sm font-bold text-gradient-brand">{X.toFixed(1)} cm</div>
+              </div>
+              <div className="rounded-xl bg-background/50 dark:bg-background/10 p-2 border border-border/20">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                  Y Position
+                </div>
+                <div className="mt-1 text-sm font-bold text-gradient-brand">{Y.toFixed(1)} cm</div>
+              </div>
+              <div className="rounded-xl bg-background/50 dark:bg-background/10 p-2 border border-border/20">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                  Z Position
+                </div>
+                <div className="mt-1 text-sm font-bold text-gradient-brand">{Z.toFixed(1)} cm</div>
+              </div>
+              <div className="rounded-xl bg-background/50 dark:bg-background/10 p-2 border border-border/20">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                  Gripper
+                </div>
+                <div className="mt-1 text-sm font-bold text-pink-400">{gripperClaws}%</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Controls Below Visualization Workspace */}
+          <div className="mt-10 w-full max-w-2xl grid gap-6 sm:grid-cols-2">
+            {/* Slider 1: Base */}
+            <div className="flex flex-col gap-2 rounded-2xl bg-background/60 dark:bg-background/20 p-4 border border-border/20 shadow-soft">
+              <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-foreground/80">
+                <span>Base Rotation</span>
+                <span className="text-brand font-mono">{baseRotation}°</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="180"
+                value={baseRotation}
+                onChange={(e) => setBaseRotation(Number(e.target.value))}
+                className="w-full h-1.5 rounded bg-border accent-brand cursor-pointer mt-1"
+              />
+            </div>
+
+            {/* Slider 2: Shoulder */}
+            <div className="flex flex-col gap-2 rounded-2xl bg-background/60 dark:bg-background/20 p-4 border border-border/20 shadow-soft">
+              <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-foreground/80">
+                <span>Shoulder Angle</span>
+                <span className="text-brand font-mono">{shoulderAngle}°</span>
+              </div>
+              <input
+                type="range"
+                min="15"
+                max="165"
+                value={shoulderAngle}
+                onChange={(e) => setShoulderAngle(Number(e.target.value))}
+                className="w-full h-1.5 rounded bg-border accent-brand cursor-pointer mt-1"
+              />
+            </div>
+
+            {/* Slider 3: Elbow */}
+            <div className="flex flex-col gap-2 rounded-2xl bg-background/60 dark:bg-background/20 p-4 border border-border/20 shadow-soft">
+              <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-foreground/80">
+                <span>Elbow Angle</span>
+                <span className="text-brand font-mono">{elbowAngle}°</span>
+              </div>
+              <input
+                type="range"
+                min="15"
+                max="165"
+                value={elbowAngle}
+                onChange={(e) => setElbowAngle(Number(e.target.value))}
+                className="w-full h-1.5 rounded bg-border accent-brand cursor-pointer mt-1"
+              />
+            </div>
+
+            {/* Slider 4: Gripper */}
+            <div className="flex flex-col gap-2 rounded-2xl bg-background/60 dark:bg-background/20 p-4 border border-border/20 shadow-soft">
+              <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-foreground/80">
+                <span>Gripper Claws</span>
+                <span className="text-brand font-mono">{gripperClaws}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={gripperClaws}
+                onChange={(e) => setGripperClaws(Number(e.target.value))}
+                className="w-full h-1.5 rounded bg-border accent-brand cursor-pointer mt-1"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// -----------------------------------------------------------------------------
 // Post-Evaluation
 // -----------------------------------------------------------------------------
 
@@ -1869,6 +2225,7 @@ function IoTrackPage() {
         <UserManual />
         <FAQs />
         <DemoSummary />
+        <RoboticArmSimulator />
         <PostEvaluation />
       </main>
       <Footer />
