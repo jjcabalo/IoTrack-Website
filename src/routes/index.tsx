@@ -736,7 +736,7 @@ const CONCEPTS = [
     icon: Radar,
     blurb: "Devices that convert physical phenomena into digital signals.",
     detail:
-      "IoTrack uses a color sensor that reads RGB values from a block's surface and reports them to the microcontroller.",
+      "IoTrack uses an RGB color sensor to detect block colors for the sorting function. In contrast, the stacking function runs open-loop without using the sensor, relying on mechanical timing.",
   },
   {
     title: "Microcontrollers",
@@ -758,7 +758,7 @@ const CONCEPTS = [
     icon: Cog,
     blurb: "Turning sensor data into physical action, hands-free.",
     detail:
-      "When the sensor detects a color, the arm autonomously picks and places the block in its designated area.",
+      "For sorting, the arm acts on real-time color readings. For stacking, it automates a multi-step pick-and-place sequence using preset coordinate values.",
   },
   {
     title: "Robotics",
@@ -848,8 +848,8 @@ const COMPONENTS = [
   {
     name: "Color Sensor",
     icon: ScanLine,
-    desc: "RGB color detector positioned above the pick area.",
-    func: "Identifies each block's color to determine its destination.",
+    desc: "RGB color detector positioned above the pick area. (Used for Color Sorting only)",
+    func: "Identifies each block's color to determine its sorting destination. Disabled during Stacking mode.",
   },
   {
     name: "Power Supply",
@@ -967,10 +967,62 @@ const ARM_STEPS = [
   { t: "Ready for Next Block", d: "System waits for the next detection cycle.", icon: Sparkles },
 ];
 
+const STACKING_STEPS = [
+  {
+    t: "Initialize System",
+    d: "Microcontroller boots, sets the home coordinate state, and sweeps servos to their initial starting pose (Base 80°, Shoulder 60°, Elbow 130°, Gripper 85°).",
+    icon: Zap,
+  },
+  {
+    t: "Move to Pickup Zone",
+    d: "The arm smoothly rotates base (DOF 1) to 170° and lowers shoulder (DOF 2) and elbow (DOF 3) to align the open gripper above the pickup zone.",
+    icon: Move3d,
+  },
+  {
+    t: "Grasp Block",
+    d: "The gripper servo closes claw fingers (DOF 4) to 75° to secure the block.",
+    icon: Hand,
+  },
+  {
+    t: "Lift Block",
+    d: "Servos shoulder and elbow lift the block to clear any obstacles.",
+    icon: RotateCw,
+  },
+  {
+    t: "Rotate to Destination",
+    d: "The base rotates towards Stack 1 (73°) or Stack 2 (55°).",
+    icon: MapPin,
+  },
+  {
+    t: "Adjust Stack Layer Height",
+    d: "The controller calculates shoulder and elbow angles corresponding to layer height (1.1, 1.2, or 1.3) to place the block safely on the stack.",
+    icon: Boxes,
+  },
+  {
+    t: "Release Block",
+    d: "The gripper opens back to 100° to place the block on the stack.",
+    icon: CheckCircle2,
+  },
+  {
+    t: "Return to Home State",
+    d: "The arm resets back to base home angle (80°) to scan and repeat the next sequence.",
+    icon: Bot,
+  },
+  {
+    t: "Complete Dual Stack Sequence",
+    d: "The cycle repeats 6 times to build two separate 3-layer stacks of blocks.",
+    icon: Sparkles,
+  },
+];
+
 function RoboticArmWorkflow() {
+  const [activeArmMode, setActiveArmMode] = useState<'sorting' | 'stacking'>('sorting');
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
+
+  const steps = activeArmMode === "sorting" ? ARM_STEPS : STACKING_STEPS;
+
   return (
     <section id="robotic-arm" ref={ref} className="relative overflow-hidden py-32">
       <BlobsBackground />
@@ -981,6 +1033,32 @@ function RoboticArmWorkflow() {
           description="A cinematic breakdown of the full pick-and-place workflow — from boot to sort."
         />
 
+        {/* Dynamic Mode Switcher */}
+        <div className="mt-10 flex justify-center">
+          <div className="relative flex rounded-full glass p-1.5 shadow-soft">
+            <button
+              onClick={() => setActiveArmMode("sorting")}
+              className={`relative z-10 rounded-full px-6 py-2.5 text-sm font-semibold transition-all cursor-pointer ${
+                activeArmMode === "sorting"
+                  ? "text-primary-foreground bg-gradient-brand shadow-glow font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Color Sorting Mode
+            </button>
+            <button
+              onClick={() => setActiveArmMode("stacking")}
+              className={`relative z-10 rounded-full px-6 py-2.5 text-sm font-semibold transition-all cursor-pointer ${
+                activeArmMode === "stacking"
+                  ? "text-primary-foreground bg-gradient-brand shadow-glow font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Stacking Mode
+            </button>
+          </div>
+        </div>
+
         <div className="mt-20 grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:items-start">
           {/* Sticky arm */}
           <div className="lg:sticky lg:top-28">
@@ -988,10 +1066,24 @@ function RoboticArmWorkflow() {
               <div className="absolute inset-0 rounded-[3rem] bg-gradient-brand opacity-25 blur-3xl" />
               <div className="relative rounded-[3rem] glass p-6 shadow-glow">
                 <RoboticArm className="w-full" />
-                {/* Scan line */}
-                <div className="pointer-events-none absolute inset-6 overflow-hidden rounded-[2.5rem]">
-                  <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-brand-2 to-transparent animate-scan" />
-                </div>
+                
+                {/* Dynamic visual overlay */}
+                {activeArmMode === "sorting" ? (
+                  <div className="pointer-events-none absolute inset-6 overflow-hidden rounded-[2.5rem]">
+                    <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-brand-2 to-transparent animate-scan" />
+                  </div>
+                ) : (
+                  <div className="pointer-events-none absolute inset-6 overflow-hidden rounded-[2.5rem] flex flex-col justify-between p-5 font-mono text-[10px] text-brand/80">
+                    <div className="flex justify-between">
+                      <span>BASE: 170° &rarr; 73°/55°</span>
+                      <span>HEIGHTS: Layered</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>STACKS: 2 x 3 Blocks</span>
+                      <span>SENSOR: OFF (Open Loop)</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
@@ -1008,7 +1100,7 @@ function RoboticArmWorkflow() {
               className="absolute left-6 top-0 w-px bg-gradient-brand"
             />
             <div className="space-y-8">
-              {ARM_STEPS.map((s, i) => {
+              {steps.map((s, i) => {
                 const Icon = s.icon;
                 return (
                   <Reveal key={s.t} delay={i * 0.03} y={20}>
@@ -1130,13 +1222,67 @@ function AssemblyGuide() {
   );
 }
 
-// -----------------------------------------------------------------------------
-// User Manual accordion
-// -----------------------------------------------------------------------------
+function highlightCPP(code: string): ReactNode[] {
+  const lines = code.split("\n");
+  return lines.map((line, lineIdx) => {
+    if (line.trim().startsWith("//")) {
+      return (
+        <div key={lineIdx} className="text-zinc-500 dark:text-muted-foreground">
+          {line}
+        </div>
+      );
+    }
+    const tokens: ReactNode[] = [];
+    const parts = line.split(/(\/\/.*|#include\s+<[^>]+>|"[^"]*"|\b\d+\b|\b(?:void|int|const|bool|Servo|if|else|while|return|max|min|analogRead|pulseIn|pinMode|digitalWrite|delay|setup|loop|attach|write|map|true|false|HIGH|LOW|INPUT|OUTPUT|Serial|begin|print|println)\b|[\s\(\)\{\}\[\]\+\-\*\/=;!,&|<>])/g);
+    parts.forEach((part, partIdx) => {
+      if (!part) return;
+      if (part.startsWith("//")) {
+        tokens.push(
+          <span key={partIdx} className="text-zinc-500 dark:text-muted-foreground">
+            {part}
+          </span>
+        );
+      } else if (part.startsWith("#include")) {
+        tokens.push(
+          <span key={partIdx} className="text-purple-600 dark:text-brand font-semibold">
+            {part}
+          </span>
+        );
+      } else if (part.startsWith('"') && part.endsWith('"')) {
+        tokens.push(
+          <span key={partIdx} className="text-emerald-600 dark:text-brand-2">
+            {part}
+          </span>
+        );
+      } else if (/^\d+$/.test(part)) {
+        tokens.push(
+          <span key={partIdx} className="text-amber-600 dark:text-cyan-400">
+            {part}
+          </span>
+        );
+      } else if (
+        /^(?:void|int|const|bool|Servo|if|else|while|return|max|min|analogRead|pulseIn|pinMode|digitalWrite|delay|setup|loop|attach|write|map|true|false|HIGH|LOW|INPUT|OUTPUT|Serial|begin|print|println)$/.test(
+          part
+        )
+      ) {
+        tokens.push(
+          <span key={partIdx} className="text-purple-600 dark:text-brand font-semibold">
+            {part}
+          </span>
+        );
+      } else {
+        tokens.push(<span key={partIdx}>{part}</span>);
+      }
+    });
+    return (
+      <div key={lineIdx} className="min-h-[1.5em]">
+        {tokens}
+      </div>
+    );
+  });
+}
 
-function CodeClipboard() {
-  const [copied, setCopied] = useState(false);
-  const codeText = `#include <Servo.h>
+const CALIBRATION_CODE = `#include <Servo.h>
 
 // Define Servo Objects
 Servo baseServo;
@@ -1154,40 +1300,308 @@ const int JOY_X1 = A0; // Base Control
 const int JOY_Y1 = A1; // Shoulder Control
 
 void setup() {
-  // Attach servos to respective PWM pins
   baseServo.attach(BASE_PIN);
   shoulderServo.attach(SHOULDER_PIN);
   elbowServo.attach(ELBOW_PIN);
   gripperServo.attach(GRIPPER_PIN);
 
-  // Calibration Safe-State: Force all servos to mid-points
   baseServo.write(90);
   shoulderServo.write(90);
   elbowServo.write(90);
   gripperServo.write(90);
   
-  delay(2000); // Wait 2 seconds for mechanical alignment
+  delay(2000); 
 }
 
 void loop() {
-  // Read joystick input values (0 to 1023)
   int valX = analogRead(JOY_X1);
   int valY = analogRead(JOY_Y1);
 
-  // Map analog inputs to safe operating angles
   int targetBase = map(valX, 0, 1023, 10, 170);
   int targetShoulder = map(valY, 0, 1023, 30, 150);
 
-  // Write smooth updates to actuators
   baseServo.write(targetBase);
   shoulderServo.write(targetShoulder);
   
-  delay(20); // Frequency delay stabilizing the loop
+  delay(20); 
 }`;
+
+const COLOR_SORTING_CODE = `#include <Servo.h>
+
+// Servo setup for 4 DOF
+Servo servoWAIST, servoSHOULDER, servoELBOW, servoGRIPPER;
+int posWAIST = 90, posSHOULDER = 90, posELBOW = 90, posGRIPPER = 90;
+
+// TCS3200 color sensor pins
+const int s0 = 12, s1 = 13, s2 = 10, s3 = 8, out = 11;
+
+// Color readings
+int redVal = 0, greenVal = 0, blueVal = 0;
+
+void setup() {
+  Serial.begin(9600);
+
+  // Attach servos
+  servoWAIST.attach(3);
+  servoSHOULDER.attach(5);
+  servoELBOW.attach(6);
+  servoGRIPPER.attach(9);
+
+  // Color sensor setup
+  pinMode(s0, OUTPUT); pinMode(s1, OUTPUT);
+  digitalWrite(s0, HIGH); digitalWrite(s1, LOW); // 20% scaling
+
+  pinMode(s2, OUTPUT); pinMode(s3, OUTPUT);
+  pinMode(out, INPUT);
+
+  // Move to initial position
+  moveArm(85, 20, 120, 85);
+  delay(2000);
+}
+
+void loop() {
+  readColor();
+
+  Serial.print("R: "); Serial.print(redVal);
+  Serial.print(" | G: "); Serial.print(greenVal);
+  Serial.print(" | B: "); Serial.println(blueVal);
+
+  if (isRed()) {
+    Serial.println("Detected RED box");
+    redTask();
+  } else if (isGreen()) {
+    Serial.println("Detected GREEN box");
+    greenTask();
+  } else if (isBlue()) {
+    Serial.println("Detected BLUE box");
+    blueTask();
+  } else {
+    Serial.println("No valid color detected.");
+  }
+
+  delay(2000);
+}
+
+// ----------- COLOR SENSOR FUNCTIONS ---------------
+void readColor() {
+  redVal = readColorValue(LOW, LOW);
+  greenVal = readColorValue(HIGH, HIGH);
+  blueVal = readColorValue(LOW, HIGH);
+}
+
+int readColorValue(bool s2val, bool s3val) {
+  digitalWrite(s2, s2val);
+  digitalWrite(s3, s3val);
+  delay(50);
+  return pulseIn(out, LOW);
+}
+
+bool isRed() {
+  return (redVal < greenVal && redVal < blueVal && redVal < 60);
+}
+
+bool isGreen() {
+  return (greenVal < redVal && greenVal < blueVal && greenVal < 60);
+}
+
+bool isBlue() {
+  return (blueVal < redVal && blueVal < greenVal && blueVal < 90);
+}
+
+// ----------- SERVO MOVEMENT FUNCTIONS ---------------
+void moveSmooth(Servo &servo, int &currentPos, int targetPos) {
+  int step = (targetPos > currentPos) ? 1 : -1;
+  for (int pos = currentPos; pos != targetPos; pos += step) {
+    servo.write(pos);
+    delay(10);
+  }
+  currentPos = targetPos;
+  servo.write(currentPos);
+}
+
+void moveArm(int waist, int shoulder, int elbow, int gripper) {
+  moveSmooth(servoWAIST, posWAIST, waist);
+  moveSmooth(servoSHOULDER, posSHOULDER, shoulder);
+  moveSmooth(servoELBOW, posELBOW, elbow);
+  moveSmooth(servoGRIPPER, posGRIPPER, gripper);
+}
+
+// ----------- TASKS ---------------
+void redTask() {
+  gripperCheck();
+  moveArm(177, 20, 120, 85);
+  moveArm(177, 20, 120, 100);
+  moveArm(177, 20, 60, 100);
+  moveArm(177, 30, 60, 100);
+  moveArm(177, 30, 40, 100);
+  moveArm(177, 40, 40, 100);
+  moveArm(177, 48, 40, 100);
+  moveArm(177, 48, 28, 100);
+  moveArm(177, 55, 28, 100);
+  moveArm(177, 55, 28, 80);
+  moveArm(177, 45, 28, 80);
+  moveArm(177, 40, 40, 80);
+  moveArm(177, 30, 40, 80);
+  moveArm(177, 30, 50, 80);
+  moveArm(130, 45, 28, 80);
+  moveArm(130, 45, 70, 80);
+  moveArm(130, 70, 70, 100);
+  moveArm(130, 45, 70, 80);
+  moveArm(130, 45, 70, 80);
+  moveArm(85, 20, 120, 85);  // Back to initial
+}
+
+void greenTask() {
+  gripperCheck();
+  moveArm(177, 20, 120, 85);
+  moveArm(177, 20, 120, 100);
+  moveArm(177, 20, 60, 100);
+  moveArm(177, 30, 60, 100);
+  moveArm(177, 30, 40, 100);
+  moveArm(177, 40, 40, 100);
+  moveArm(177, 48, 40, 100);
+  moveArm(177, 48, 28, 100);
+  moveArm(177, 55, 28, 100);
+  moveArm(177, 55, 28, 80);
+  moveArm(177, 45, 28, 80);
+  moveArm(177, 40, 40, 80);
+  moveArm(177, 30, 40, 80);
+  moveArm(177, 30, 50, 80);
+  moveArm(150, 45, 40, 80);
+  moveArm(150, 55, 40, 100);
+  moveArm(150, 45, 70, 80);
+  moveArm(85, 20, 120, 85);  // Back to initial
+}
+
+void blueTask() {
+  gripperCheck();
+  moveArm(177, 20, 120, 85);
+  moveArm(177, 20, 120, 100);
+  moveArm(177, 20, 60, 100);
+  moveArm(177, 30, 60, 100);
+  moveArm(177, 30, 40, 100);
+  moveArm(177, 40, 40, 100);
+  moveArm(177, 48, 40, 100);
+  moveArm(177, 48, 28, 100);
+  moveArm(177, 55, 28, 100);
+  moveArm(177, 55, 28, 80);
+  moveArm(177, 45, 28, 80);
+  moveArm(177, 40, 40, 80);
+  moveArm(177, 30, 40, 80);
+  moveArm(177, 30, 50, 80);
+  moveArm(115, 40, 40, 80);
+  moveArm(115, 55, 40, 100);
+  moveArm(115, 55, 70, 100);
+  moveArm(85, 20, 120, 85);  // Back to initial
+}
+
+// ----------- GRIPPER CHECK ---------------
+void gripperCheck() {
+  servoGRIPPER.write(100); delay(300);
+  servoGRIPPER.write(85); delay(300);
+  servoGRIPPER.write(100); delay(300);
+  servoGRIPPER.write(85); delay(300);
+  posGRIPPER = 85;  
+}`;
+
+const STACKING_CODE = `#include <Servo.h>
+
+// Define servo objects
+Servo servoWAIST;
+Servo servoSHOULDER;
+Servo servoELBOW;
+Servo servoGRIPPER;
+
+// Track current positions
+int posWAIST = 90;
+int posSHOULDER = 90;
+int posELBOW = 90;
+int posGRIPPER = 90;
+
+// Clamp values between 0 and 180
+int clamp(int val, int minVal = 0, int maxVal = 180) {
+  return max(min(val, maxVal), minVal);
+}
+
+// Smooth movement function
+void smoothMove(Servo& servo, int& currentPos, int targetPos) {
+  targetPos = clamp(targetPos);
+  int step = (currentPos < targetPos) ? 1 : -1;
+  while (currentPos != targetPos) {
+    currentPos += step;
+    servo.write(currentPos);
+    delay(10); 
+  }
+}
+
+// Move all servos smoothly
+void moveArmSmooth(int waist, int shoulder, int elbow, int gripper) {
+  smoothMove(servoWAIST, posWAIST, waist);
+  smoothMove(servoSHOULDER, posSHOULDER, shoulder);
+  smoothMove(servoELBOW, posELBOW, elbow);
+  smoothMove(servoGRIPPER, posGRIPPER, gripper);
+}
+
+void setup() {
+  servoWAIST.attach(3);
+  servoSHOULDER.attach(5);
+  servoELBOW.attach(6);
+  servoGRIPPER.attach(9);
+
+  servoWAIST.write(posWAIST);
+  servoSHOULDER.write(posSHOULDER);
+  servoELBOW.write(posELBOW);
+  servoGRIPPER.write(posGRIPPER);
+
+  delay(500); 
+
+  moveArmSmooth(80, 60, 130, 100);
+  delay(3000);
+}
+
+void loop() {
+  // Move to pickup position
+  moveArmSmooth(80, 60, 130, 85);    
+  moveArmSmooth(170, 60, 80, 100);   
+  moveArmSmooth(170, 70, 80, 100);   
+  moveArmSmooth(170, 70, 60, 100);   
+  moveArmSmooth(170, 80, 45, 100);   
+  moveArmSmooth(170, 95, 45, 100);   
+  delay(500);
+  moveArmSmooth(170, 95, 43, 75);    
+  moveArmSmooth(170, 80, 60, 75);    
+  moveArmSmooth(73, 95, 65, 75);     
+  moveArmSmooth(73, 100, 120, 75);   
+  moveArmSmooth(73, 130, 80, 100);   
+  moveArmSmooth(73, 60, 130, 85);    
+  delay(2000);      
+}`;
+
+function CodeClipboard() {
+  const [selectedFile, setSelectedFile] = useState(0);
+  const [copied, setCopied] = useState(false);
+
+  const files = [
+    {
+      name: "calibration.ino",
+      description: "Initial Servo Calibration & Manual Control Code",
+      code: CALIBRATION_CODE,
+    },
+    {
+      name: "color_sorting.ino",
+      description: "Automatic Color Pick and Place Sorting Code",
+      code: COLOR_SORTING_CODE,
+    },
+    {
+      name: "stacking.ino",
+      description: "Sequential Coordinate-based Stacking Code",
+      code: STACKING_CODE,
+    },
+  ];
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(codeText);
+      await navigator.clipboard.writeText(files[selectedFile].code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -1197,11 +1611,29 @@ void loop() {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-background/60 dark:bg-black/30 text-left font-mono shadow-soft">
-      {/* Clipboard Header */}
-      <div className="flex items-center justify-between border-b border-border/40 bg-background/80 dark:bg-black/20 px-5 py-3 text-xs text-muted-foreground">
+      <div className="flex flex-wrap border-b border-border/40 bg-background/80 dark:bg-black/20 px-4 py-2 gap-2">
+        {files.map((file, idx) => (
+          <button
+            key={file.name}
+            onClick={() => {
+              setSelectedFile(idx);
+              setCopied(false);
+            }}
+            className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
+              selectedFile === idx
+                ? "bg-gradient-brand text-primary-foreground shadow-glow font-bold"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
+            }`}
+          >
+            {file.name}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between border-b border-border/40 bg-background/50 dark:bg-black/10 px-5 py-3 text-xs text-muted-foreground">
         <span className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-brand" />
-          <span>calibration.ino</span>
+          <span className="h-2 w-2 rounded-full bg-brand animate-pulse" />
+          <span>{files[selectedFile].description}</span>
         </span>
         <button
           onClick={handleCopy}
@@ -1221,144 +1653,14 @@ void loop() {
         </button>
       </div>
 
-      {/* Code Area */}
-      <div className="overflow-x-auto p-5 text-xs leading-relaxed text-zinc-800 dark:text-foreground/90 selection:bg-brand/30">
+      <div className="overflow-x-auto p-5 text-xs leading-relaxed text-zinc-800 dark:text-foreground/90 selection:bg-brand/30 max-h-[480px]">
         <pre className="scrollbar-none">
-          <code>
-            <span className="text-purple-600 dark:text-brand">#include</span>{" "}
-            <span className="text-emerald-600 dark:text-brand-2">&lt;Servo.h&gt;</span>
-            {"\n\n"}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              // Define Servo Objects
-            </span>
-            {"\n"}
-            <span className="text-purple-600 dark:text-brand">Servo</span> baseServo;{"\n"}
-            <span className="text-purple-600 dark:text-brand">Servo</span> shoulderServo;{"\n"}
-            <span className="text-purple-600 dark:text-brand">Servo</span> elbowServo;{"\n"}
-            <span className="text-purple-600 dark:text-brand">Servo</span> gripperServo;{"\n\n"}
-            <span className="text-zinc-500 dark:text-muted-foreground">// Pin Configurations</span>
-            {"\n"}
-            <span className="text-purple-600 dark:text-brand">const</span>{" "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> BASE_PIN ={" "}
-            <span className="text-amber-600 dark:text-cyan-400">3</span>;{"\n"}
-            <span className="text-purple-600 dark:text-brand">const</span>{" "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> SHOULDER_PIN ={" "}
-            <span className="text-amber-600 dark:text-cyan-400">5</span>;{"\n"}
-            <span className="text-purple-600 dark:text-brand">const</span>{" "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> ELBOW_PIN ={" "}
-            <span className="text-amber-600 dark:text-cyan-400">6</span>;{"\n"}
-            <span className="text-purple-600 dark:text-brand">const</span>{" "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> GRIPPER_PIN ={" "}
-            <span className="text-amber-600 dark:text-cyan-400">9</span>;{"\n\n"}
-            <span className="text-purple-600 dark:text-brand">const</span>{" "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> JOY_X1 ={" "}
-            <span className="text-amber-600 dark:text-cyan-400">A0</span>;{" "}
-            <span className="text-zinc-500 dark:text-muted-foreground">// Base Control</span>
-            {"\n"}
-            <span className="text-purple-600 dark:text-brand">const</span>{" "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> JOY_Y1 ={" "}
-            <span className="text-amber-600 dark:text-cyan-400">A1</span>;{" "}
-            <span className="text-zinc-500 dark:text-muted-foreground">// Shoulder Control</span>
-            {"\n\n"}
-            <span className="text-blue-600 dark:text-blue-400">void</span>{" "}
-            <span className="text-fuchsia-600 dark:text-purple-400 font-semibold">setup</span>()
-            &#123;{"\n"}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              {" "}
-              // Attach servos to respective PWM pins
-            </span>
-            {"\n"}
-            {"  "}baseServo.<span className="text-fuchsia-600 dark:text-purple-400">attach</span>
-            (BASE_PIN);{"\n"}
-            {"  "}shoulderServo.
-            <span className="text-fuchsia-600 dark:text-purple-400">attach</span>(SHOULDER_PIN);
-            {"\n"}
-            {"  "}elbowServo.<span className="text-fuchsia-600 dark:text-purple-400">attach</span>
-            (ELBOW_PIN);{"\n"}
-            {"  "}gripperServo.<span className="text-fuchsia-600 dark:text-purple-400">attach</span>
-            (GRIPPER_PIN);{"\n\n"}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              {" "}
-              // Calibration Safe-State: Force all servos to mid-points
-            </span>
-            {"\n"}
-            {"  "}baseServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>(
-            <span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n"}
-            {"  "}shoulderServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>
-            (<span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n"}
-            {"  "}elbowServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>(
-            <span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n"}
-            {"  "}gripperServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>(
-            <span className="text-amber-600 dark:text-cyan-400">90</span>);{"\n\n"}
-            {"  "}
-            <span className="text-fuchsia-600 dark:text-purple-400">delay</span>(
-            <span className="text-amber-600 dark:text-cyan-400">2000</span>);{" "}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              // Wait 2 seconds for mechanical alignment
-            </span>
-            {"\n"}
-            &#125;{"\n\n"}
-            <span className="text-blue-600 dark:text-blue-400">void</span>{" "}
-            <span className="text-fuchsia-600 dark:text-purple-400 font-semibold">loop</span>()
-            &#123;{"\n"}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              {" "}
-              // Read joystick input values (0 to 1023)
-            </span>
-            {"\n"}
-            {"  "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> valX ={" "}
-            <span className="text-fuchsia-600 dark:text-purple-400">analogRead</span>(JOY_X1);{"\n"}
-            {"  "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> valY ={" "}
-            <span className="text-fuchsia-600 dark:text-purple-400">analogRead</span>(JOY_Y1);
-            {"\n\n"}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              {" "}
-              // Map analog inputs to safe operating angles
-            </span>
-            {"\n"}
-            {"  "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> targetBase ={" "}
-            <span className="text-fuchsia-600 dark:text-purple-400">map</span>(valX,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">0</span>,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">1023</span>,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">10</span>,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">170</span>);{"\n"}
-            {"  "}
-            <span className="text-blue-600 dark:text-blue-400">int</span> targetShoulder ={" "}
-            <span className="text-fuchsia-600 dark:text-purple-400">map</span>(valY,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">0</span>,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">1023</span>,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">30</span>,{" "}
-            <span className="text-amber-600 dark:text-cyan-400">150</span>);{"\n\n"}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              {" "}
-              // Write smooth updates to actuators
-            </span>
-            {"\n"}
-            {"  "}baseServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>
-            (targetBase);{"\n"}
-            {"  "}shoulderServo.<span className="text-fuchsia-600 dark:text-purple-400">write</span>
-            (targetShoulder);{"\n\n"}
-            {"  "}
-            <span className="text-fuchsia-600 dark:text-purple-400">delay</span>(
-            <span className="text-amber-600 dark:text-cyan-400">20</span>);{" "}
-            <span className="text-zinc-500 dark:text-muted-foreground">
-              // Frequency delay stabilizing the loop
-            </span>
-            {"\n"}
-            &#125;
-          </code>
+          <code>{highlightCPP(files[selectedFile].code)}</code>
         </pre>
       </div>
     </div>
   );
 }
-
-// -----------------------------------------------------------------------------
-// User Manual accordion
-// -----------------------------------------------------------------------------
 
 const MANUAL = [
   {
@@ -1374,8 +1676,8 @@ const MANUAL = [
     d: "Boot the system and use the web dashboard or analog joysticks to control the X/Y axes of the arm.",
   },
   {
-    t: "Sensor & Servo Calibration",
-    d: "Crucial Step. You must electronically center all 4 servos to 90 degrees before screwing the acrylic pieces to them to prevent mechanical binding.",
+    t: "Calibration & Arduino Source Code",
+    d: "Crucial Step. You must electronically center all 4 servos to 90 degrees before assembly, and upload the appropriate program for Color Sorting or Stacking.",
   },
   {
     t: "Maintenance",
@@ -1484,6 +1786,14 @@ const FAQS = [
     a: 'Run the provided calibration script to lock all motors at exactly 90 degrees. Once locked, attach the acrylic horns so the arm sits in a perfect "L" shape.',
   },
   {
+    q: "How does the stacking function work without color sensors?",
+    a: "Stacking operates open-loop using precise coordinate sequences. The microcontroller runs a timed step-by-step routine with pre-calculated servo angles for picking up blocks at base angle 170° and placing them in stacks at 73° and 55°.",
+  },
+  {
+    q: "How does the arm adjust for the height of stacked blocks?",
+    a: "For each layer in the stack (levels 1, 2, and 3), the shoulder and elbow servos are programmed with specific angular values to compensate for the height of the previously placed blocks, ensuring the gripper releases each block precisely.",
+  },
+  {
     q: "How do I maintain the robotic arm?",
     a: "Ensure the power supply is stable, never manually force the joints, and keep the pivot screws snug but not overly tight to allow smooth articulation.",
   },
@@ -1555,10 +1865,22 @@ const SUMMARY = [
   { t: "Ready Again", icon: Sparkles },
 ];
 
-const TRIPLE_SUMMARY = [...SUMMARY, ...SUMMARY, ...SUMMARY];
+const STACKING_SUMMARY = [
+  { t: "Robot Initializes", icon: Zap },
+  { t: "Move to Pickup Zone", icon: Move3d },
+  { t: "Grip Block", icon: Hand },
+  { t: "Lift Block", icon: RotateCw },
+  { t: "Rotate to Stack", icon: MapPin },
+  { t: "Release Object", icon: CheckCircle2 },
+  { t: "Return to Home", icon: Bot },
+];
 
 function DemoSummary() {
+  const [activeArmMode, setActiveArmMode] = useState<'sorting' | 'stacking'>('sorting');
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const currentSummary = activeArmMode === "sorting" ? SUMMARY : STACKING_SUMMARY;
+  const tripleSummary = [...currentSummary, ...currentSummary, ...currentSummary];
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -1604,7 +1926,7 @@ function DemoSummary() {
       el.removeEventListener("mouseenter", handleMouseEnter);
       el.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [activeArmMode]);
 
   return (
     <section id="demo" className="relative overflow-hidden py-32">
@@ -1612,24 +1934,51 @@ function DemoSummary() {
       <div className="relative mx-auto max-w-6xl px-8">
         <SectionHeader
           eyebrow="Step 9 · Demonstration Summary"
-          title="The complete pick-and-sort loop"
-          description="A recap of the routine you just watched — one continuous animated flow."
+          title="The complete loop"
+          description="A recap of the active program routine — one continuous automated flow."
         />
+
+        {/* Dynamic Mode Switcher */}
+        <div className="mt-10 flex justify-center">
+          <div className="relative flex rounded-full glass p-1.5 shadow-soft">
+            <button
+              onClick={() => setActiveArmMode("sorting")}
+              className={`relative z-10 rounded-full px-6 py-2.5 text-sm font-semibold transition-all cursor-pointer ${
+                activeArmMode === "sorting"
+                  ? "text-primary-foreground bg-gradient-brand shadow-glow font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Color Sorting Demo
+            </button>
+            <button
+              onClick={() => setActiveArmMode("stacking")}
+              className={`relative z-10 rounded-full px-6 py-2.5 text-sm font-semibold transition-all cursor-pointer ${
+                activeArmMode === "stacking"
+                  ? "text-primary-foreground bg-gradient-brand shadow-glow font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Stacking Demo
+            </button>
+          </div>
+        </div>
+
         <div
           ref={scrollRef}
-          className="scrollbar-none md:mask-fade-edges mt-20 flex flex-col items-stretch gap-4 py-8 md:flex-row md:items-center md:overflow-x-auto"
+          className="scrollbar-none md:mask-fade-edges mt-10 flex flex-col items-stretch gap-4 py-16 md:flex-row md:items-center md:overflow-x-auto"
           style={{ scrollBehavior: "auto" }}
         >
-          {TRIPLE_SUMMARY.map((s, i) => {
+          {tripleSummary.map((s, i) => {
             const Icon = s.icon;
             return (
               <div
                 key={i}
                 className={`flex shrink-0 flex-col items-center gap-4 md:flex-row ${
-                  i >= SUMMARY.length ? "hidden md:flex" : ""
+                  i >= currentSummary.length ? "hidden md:flex" : ""
                 }`}
               >
-                <Reveal delay={(i % SUMMARY.length) * 0.1} y={20} className="shrink-0">
+                <Reveal delay={(i % currentSummary.length) * 0.1} y={20} className="shrink-0">
                   <motion.div
                     whileHover={{ y: -6, scale: 1.05 }}
                     className="flex w-52 flex-col items-center gap-3 rounded-2xl glass p-5 text-center shadow-soft transition-all hover:shadow-glow"
@@ -1639,16 +1988,16 @@ function DemoSummary() {
                     </div>
                     <div className="text-sm font-semibold">{s.t}</div>
                     <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                      {String((i % SUMMARY.length) + 1).padStart(2, "0")}
+                      {String((i % currentSummary.length) + 1).padStart(2, "0")}
                     </div>
                   </motion.div>
                 </Reveal>
-                {i < TRIPLE_SUMMARY.length - 1 && (
+                {i < tripleSummary.length - 1 && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ delay: (i % SUMMARY.length) * 0.1 + 0.2 }}
+                    transition={{ delay: (i % currentSummary.length) * 0.1 + 0.2 }}
                     className="hidden shrink-0 text-muted-foreground md:block"
                   >
                     <motion.div
