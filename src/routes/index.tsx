@@ -417,7 +417,7 @@ function Hero() {
               <MagneticButton
                 variant="ghost"
                 onClick={() =>
-                  document.getElementById("robotic-arm")?.scrollIntoView({ behavior: "smooth" })
+                  document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" })
                 }
               >
                 <Play className="h-4 w-4" />
@@ -429,7 +429,7 @@ function Hero() {
             <div className="mt-12 grid max-w-md grid-cols-3 gap-6">
               {[
                 { n: 9, s: "+", l: "Modules" },
-                { n: 6, s: "", l: "Components" },
+                { n: 8, s: "", l: "Components" },
                 { n: 100, s: "%", l: "Hands-on" },
               ].map((s) => (
                 <div key={s.l}>
@@ -1607,7 +1607,7 @@ function DemoSummary() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden py-32">
+    <section id="demo" className="relative overflow-hidden py-32">
       <BlobsBackground />
       <div className="relative mx-auto max-w-6xl px-6">
         <SectionHeader
@@ -1625,8 +1625,9 @@ function DemoSummary() {
             return (
               <div
                 key={i}
-                className={`flex shrink-0 flex-col items-center gap-4 md:flex-row ${i >= SUMMARY.length ? "hidden md:flex" : ""
-                  }`}
+                className={`flex shrink-0 flex-col items-center gap-4 md:flex-row ${
+                  i >= SUMMARY.length ? "hidden md:flex" : ""
+                }`}
               >
                 <Reveal delay={(i % SUMMARY.length) * 0.1} y={20} className="shrink-0">
                   <motion.div
@@ -1885,8 +1886,7 @@ function RoboticArmSimulator() {
         <div className="mt-16 rounded-3xl glass p-8 shadow-soft flex flex-col items-center">
           {/* Canvas Viewport */}
           <div className="relative overflow-hidden rounded-2xl border border-border/30 bg-background/50 dark:bg-black/40 p-4 shadow-soft flex flex-col items-center w-full max-w-lg">
-            <div className="absolute top-2 left-3 text-[9px] font-mono uppercase tracking-wider text-muted-foreground/60">
-            </div>
+            <div className="absolute top-2 left-3 text-[9px] font-mono uppercase tracking-wider text-muted-foreground/60"></div>
             <canvas
               ref={canvasRef}
               width={500}
