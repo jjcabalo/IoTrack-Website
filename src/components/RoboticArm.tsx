@@ -1,12 +1,59 @@
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 type Props = {
   className?: string;
   animate?: boolean;
 };
 
-// Stylized SVG robotic arm. Uses currentColor for base and CSS classes for accents.
 export function RoboticArm({ className, animate = true }: Props) {
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    if (!animate) return;
+    let animId: number;
+    const startTime = Date.now();
+    const tick = () => {
+      setTime((Date.now() - startTime) / 1000);
+      animId = requestAnimationFrame(tick);
+    };
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, [animate]);
+
+  // Oscillation ranges for smooth, premium arm cycles
+  // Base rotation representation
+  const baseRotation = animate ? 90 + 40 * Math.sin(time * 0.8) : 90;
+  // Shoulder (15 to 165 degrees) - limited to nice active profiles
+  const shoulderAngle = animate ? 65 + 35 * Math.sin(time * 1.0) : 65;
+  // Elbow (15 to 165 degrees)
+  const elbowAngle = animate ? 90 + 45 * Math.cos(time * 1.0) : 90;
+  // Gripper claws open/closed (0% to 100%)
+  const gripperClaws = animate ? 50 + 50 * Math.sin(time * 2.0) : 50;
+
+  const radShoulder = (shoulderAngle * Math.PI) / 180;
+  const globalForearmAngle = shoulderAngle + elbowAngle - 90;
+  const radForearm = (globalForearmAngle * Math.PI) / 180;
+  const radBase = ((radBaseAngle) => radBaseAngle)((baseRotation * Math.PI) / 180); // placeholder representation
+
+  // Pivot coordinates matching original base dimensions
+  const x0 = 200;
+  const y0 = 285; // top surface of base
+
+  const L1 = 95; // Link 1 length (Shoulder to Elbow)
+  const L2 = 80; // Link 2 length (Elbow to Wrist)
+
+  // Calculated Joint Positions (Trigonometric Forward Kinematics)
+  const x1 = x0;
+  const y1 = y0;
+  const x2 = x1 + L1 * Math.cos(radShoulder);
+  const y2 = y1 - L1 * Math.sin(radShoulder);
+  const x3 = x2 + L2 * Math.cos(radForearm);
+  const y3 = y2 - L2 * Math.sin(radForearm);
+
+  // Claws opening/closing width math
+  const gripperRatio = gripperClaws / 100;
+  const clawOffset = 5 * gripperRatio;
+
   return (
     <svg
       viewBox="0 0 400 400"
@@ -36,75 +83,65 @@ export function RoboticArm({ className, animate = true }: Props) {
         <rect x="150" y="285" width="100" height="20" rx="6" fill="url(#armGrad)" />
       </g>
 
-      {/* Lower arm - rotates */}
-      <motion.g
-        style={{ transformOrigin: "200px 290px" }}
-        animate={animate ? { rotate: [-8, 12, -8] } : undefined}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      >
+      {/* Link 1 (Shoulder to Elbow) */}
+      <g transform={`translate(${x1}, ${y1}) rotate(${-shoulderAngle})`}>
         <rect
-          x="190"
-          y="180"
-          width="20"
-          height="115"
-          rx="8"
+          x={0}
+          y={-10}
+          width={L1}
+          height={20}
+          rx={8}
           fill="url(#armGrad)"
           filter="url(#softShadow)"
         />
-        <circle cx="200" cy="290" r="14" fill="oklch(0.2 0.03 260)" />
-        <circle cx="200" cy="290" r="6" fill="oklch(0.72 0.18 265)" />
+      </g>
 
-        {/* Upper arm - independent rotation */}
-        <motion.g
-          style={{ transformOrigin: "200px 185px" }}
-          animate={animate ? { rotate: [10, -20, 10] } : undefined}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <rect
-            x="192"
-            y="90"
-            width="16"
-            height="100"
-            rx="7"
-            fill="url(#armGrad2)"
-            filter="url(#softShadow)"
-          />
-          <circle cx="200" cy="185" r="11" fill="oklch(0.2 0.03 260)" />
-          <circle cx="200" cy="185" r="5" fill="oklch(0.72 0.18 190)" />
+      {/* Link 2 (Elbow to Wrist) */}
+      <g transform={`translate(${x2}, ${y2}) rotate(${-globalForearmAngle})`}>
+        <rect
+          x={0}
+          y={-8}
+          width={L2}
+          height={16}
+          rx={7}
+          fill="url(#armGrad2)"
+          filter="url(#softShadow)"
+        />
+      </g>
 
-          {/* Head + gripper */}
-          <motion.g
-            style={{ transformOrigin: "200px 90px" }}
-            animate={animate ? { rotate: [-5, 15, -5] } : undefined}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <rect x="178" y="70" width="44" height="34" rx="8" fill="url(#armGrad)" />
-            <circle cx="200" cy="87" r="6" fill="oklch(0.98 0 0)" />
-            <circle cx="200" cy="87" r="3" fill="oklch(0.6 0.22 265)" />
-            {/* Gripper fingers */}
-            <motion.rect
-              x="180"
-              y="104"
-              width="6"
-              height="20"
-              rx="2"
-              fill="oklch(0.3 0.03 260)"
-              animate={animate ? { x: [180, 184, 180] } : undefined}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.rect
-              x="214"
-              y="104"
-              width="6"
-              height="20"
-              rx="2"
-              fill="oklch(0.3 0.03 260)"
-              animate={animate ? { x: [214, 210, 214] } : undefined}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.g>
-        </motion.g>
-      </motion.g>
+      {/* Wrist + Gripper Head */}
+      <g transform={`translate(${x3}, ${y3}) rotate(${-globalForearmAngle})`}>
+        <rect x={-8} y={-17} width={20} height={34} rx={6} fill="url(#armGrad)" />
+        <circle cx={2} cy={0} r={5} fill="oklch(0.98 0 0)" />
+        <circle cx={2} cy={0} r={2.5} fill="oklch(0.6 0.22 265)" />
+
+        {/* Gripper fingers */}
+        <rect
+          x={12}
+          y={-16 + clawOffset}
+          width={14}
+          height={6}
+          rx={1.5}
+          fill="oklch(0.3 0.03 260)"
+        />
+        <rect
+          x={12}
+          y={10 - clawOffset}
+          width={14}
+          height={6}
+          rx={1.5}
+          fill="oklch(0.3 0.03 260)"
+        />
+      </g>
+
+      {/* Joint Center Caps (drawn on top of links to cover junctions) */}
+      {/* Shoulder Joint */}
+      <circle cx={x1} cy={y1} r={14} fill="oklch(0.2 0.03 260)" />
+      <circle cx={x1} cy={y1} r={6} fill="oklch(0.72 0.18 265)" />
+
+      {/* Elbow Joint */}
+      <circle cx={x2} cy={y2} r={11} fill="oklch(0.2 0.03 260)" />
+      <circle cx={x2} cy={y2} r={5} fill="oklch(0.72 0.18 190)" />
 
       {/* Blocks */}
       <g filter="url(#softShadow)">
