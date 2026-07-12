@@ -1402,49 +1402,124 @@ function PostEvaluation() {
 
 function Footer() {
   return (
-    <footer className="relative border-t border-border/50 py-16">
+    <footer className="relative border-t border-border/50 bg-background/50 py-20 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 font-bold">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-brand text-primary-foreground shadow-glow">
-                <Bot className="h-5 w-5" />
+        <div className="grid gap-12 lg:grid-cols-5">
+          {/* Column 1: Info & Team (Spans 2 columns on large screens) */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="flex items-center gap-2.5 font-bold text-xl">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-brand text-primary-foreground shadow-glow">
+                <Bot className="h-5.5 w-5.5" />
               </span>
-              IoTrack Learning Kit
+              <span className="text-gradient-brand">IoTrack</span>
             </div>
-            <p className="mt-4 max-w-md text-sm text-muted-foreground">
-              A university research project exploring how IoT and robotics can make learning
-              tangible, engaging and memorable.
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              An integrated, IoT-based educational learning kit designed to introduce students to fundamental Internet of Things concepts. Instead of functioning
+              purely as isolated hardware, it combines a physical tool with a digital resource to
+              create a unified learning platform.
             </p>
-          </div>
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Project
+            <div className="pt-2">
+              <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Mapúa University Makati
+              </div>
+              <div className="mt-3 flex flex-col gap-1 text-sm text-foreground/80 font-medium">
+                <span>Selene Angel G. Aguilar</span>
+                <span>Julia Venice B. Fulgar</span>
+                <span>Emmanuel Josh M. Pabillo</span>
+              </div>
             </div>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li>Research Project</li>
-              <li>University Name</li>
-              <li>Researchers</li>
-              <li>© {new Date().getFullYear()}</li>
+          </div>
+
+          {/* Column 2: The Unified Platform */}
+          <div className="space-y-4">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Unified Platform
+            </div>
+            <ul className="space-y-4 text-sm">
+              <li>
+                <div className="font-semibold text-foreground">Companion Website</div>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  A web-based instructional resource where students study fundamental IoT concepts,
+                  hardware component descriptions, and system operations.
+                </p>
+              </li>
+              <li>
+                <div className="font-semibold text-foreground">Programmed Robotic Arm</div>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  An Arduino-powered physical device executing software logic in real time,
+                  performing block-stacking and color-sorting tasks.
+                </p>
+              </li>
             </ul>
           </div>
-          <div>
+
+          {/* Column 3: Core Mission */}
+          <div className="space-y-4">
             <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Contact
+              Core Mission
             </div>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-brand" /> iotrack@university.edu
+            <ul className="space-y-4 text-sm">
+              <li>
+                <div className="font-semibold text-foreground">Reduce Abstraction</div>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  Transforms dry technical concepts—like data acquisition and sensor
+                  interaction—into clear, physical movements.
+                </p>
               </li>
-              <li className="flex items-center gap-2">
-                <Github className="h-4 w-4 text-brand" /> github.com/iotrack
+              <li>
+                <div className="font-semibold text-foreground">Enhance Engagement</div>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  Replaces passive lectures with demonstration-based learning to spark curiosity,
+                  motivation, and coding confidence.
+                </p>
+              </li>
+              <li>
+                <div className="font-semibold text-foreground">Accessible STEM Tool</div>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  Delivers a learner-centered solution designed to prepare students
+                  for future digital environments.
+                </p>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Connect */}
+          <div className="space-y-4">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Connect
+            </div>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-center gap-2 hover:text-foreground transition-colors">
+                <Mail className="h-4 w-4 text-brand" />
+                <a href="mailto:iotrack@university.edu">iotrack@university.edu</a>
+              </li>
+              <li className="flex items-center gap-2 hover:text-foreground transition-colors">
+                <Github className="h-4 w-4 text-brand" />
+                <a href="https://github.com/iotrack" target="_blank" rel="noopener noreferrer">
+                  github.com/iotrack
+                </a>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/50 pt-6 text-xs text-muted-foreground md:flex-row">
-          <div>Built with care for research demonstrations and panel presentations.</div>
-          <div>IoTrack Learning Kit · Companion Learning Website</div>
+
+        {/* Bottom row */}
+        <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-border/50 pt-8 text-xs text-muted-foreground sm:flex-row">
+          <div>
+            © {new Date().getFullYear()} IoTrack. All rights reserved. Developed for Mapúa
+            University Makati.
+          </div>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-foreground transition-colors">
+              Documentation
+            </a>
+            <a href="#" className="hover:text-foreground transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:text-foreground transition-colors">
+              Terms of Service
+            </a>
+          </div>
         </div>
       </div>
     </footer>
