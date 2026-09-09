@@ -9,19 +9,14 @@ import {
   AnimatePresence,
   useMotionValue,
 } from "framer-motion";
-import confetti from "canvas-confetti";
 import {
   ArrowRight,
   Menu,
   X,
   Cpu,
-  Radio,
   Zap,
   Bot,
-  Cable,
-  Battery,
   CircuitBoard,
-  Wrench,
   ChevronDown,
   Sparkles,
   Radar,
@@ -40,8 +35,6 @@ import {
   GraduationCap,
   Mail,
   Github,
-  Check,
-  Copy,
   FileText,
 } from "lucide-react";
 
@@ -680,172 +673,6 @@ function FAQs() {
                   </AnimatePresence>
                 </motion.div>
               </Reveal>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// -----------------------------------------------------------------------------
-// Demonstration Summary
-// -----------------------------------------------------------------------------
-
-const SUMMARY = [
-  { t: "Robot Initializes", icon: Zap },
-  { t: "Detects Block", icon: Radar },
-  { t: "Reads Color", icon: ScanLine },
-  { t: "Picks Object", icon: Hand },
-  { t: "Moves Object", icon: Move3d },
-  { t: "Drops Object", icon: MapPin },
-  { t: "Ready Again", icon: Sparkles },
-];
-
-const STACKING_SUMMARY = [
-  { t: "Robot Initializes", icon: Zap },
-  { t: "Move to Pickup Zone", icon: Move3d },
-  { t: "Grip Block", icon: Hand },
-  { t: "Lift Block", icon: RotateCw },
-  { t: "Rotate to Stack", icon: MapPin },
-  { t: "Release Object", icon: CheckCircle2 },
-  { t: "Return to Home", icon: Bot },
-];
-
-function DemoSummary() {
-  const [activeArmMode, setActiveArmMode] = useState<'sorting' | 'stacking'>('sorting');
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const currentSummary = activeArmMode === "sorting" ? SUMMARY : STACKING_SUMMARY;
-  const tripleSummary = [...currentSummary, ...currentSummary, ...currentSummary];
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    let animId: number;
-    const speed = 0.8; // scrolling speed (pixels per frame, slightly faster but readable)
-    let isHovered = false;
-    let scrollPos = el.scrollLeft;
-
-    const tick = () => {
-      if (!isHovered && el.scrollWidth > el.clientWidth) {
-        const oneSetWidth = el.scrollWidth / 3;
-        scrollPos = scrollPos + speed;
-
-        if (scrollPos >= oneSetWidth) {
-          scrollPos = scrollPos % oneSetWidth;
-        }
-
-        el.scrollLeft = Math.round(scrollPos);
-      } else {
-        // Keep scrollPos synchronized if user manually scrolls/drags
-        const oneSetWidth = el.scrollWidth / 3;
-        scrollPos = el.scrollLeft % oneSetWidth;
-      }
-      animId = requestAnimationFrame(tick);
-    };
-
-    const handleMouseEnter = () => {
-      isHovered = true;
-    };
-    const handleMouseLeave = () => {
-      isHovered = false;
-    };
-
-    el.addEventListener("mouseenter", handleMouseEnter);
-    el.addEventListener("mouseleave", handleMouseLeave);
-
-    animId = requestAnimationFrame(tick);
-
-    return () => {
-      cancelAnimationFrame(animId);
-      el.removeEventListener("mouseenter", handleMouseEnter);
-      el.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [activeArmMode]);
-
-  return (
-    <section id="demo" className="relative overflow-hidden py-32">
-      <BlobsBackground />
-      <div className="relative mx-auto max-w-6xl px-8">
-        <SectionHeader
-          eyebrow="Step 9 · Demonstration Summary"
-          title="The complete loop"
-          description="A recap of the active program routine — one continuous automated flow."
-        />
-
-        {/* Dynamic Mode Switcher */}
-        <div className="mt-10 flex justify-center">
-          <div className="relative flex rounded-full glass p-1.5 shadow-soft">
-            <button
-              onClick={() => setActiveArmMode("sorting")}
-              className={`relative z-10 rounded-full px-6 py-2.5 text-sm font-semibold transition-all cursor-pointer ${
-                activeArmMode === "sorting"
-                  ? "text-primary-foreground bg-gradient-brand shadow-glow font-bold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Color Sorting Demo
-            </button>
-            <button
-              onClick={() => setActiveArmMode("stacking")}
-              className={`relative z-10 rounded-full px-6 py-2.5 text-sm font-semibold transition-all cursor-pointer ${
-                activeArmMode === "stacking"
-                  ? "text-primary-foreground bg-gradient-brand shadow-glow font-bold"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Stacking Demo
-            </button>
-          </div>
-        </div>
-
-        <div
-          ref={scrollRef}
-          className="scrollbar-none md:mask-fade-edges mt-10 flex flex-col items-stretch gap-4 py-16 md:flex-row md:items-center md:overflow-x-auto"
-          style={{ scrollBehavior: "auto" }}
-        >
-          {tripleSummary.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <div
-                key={i}
-                className={`flex shrink-0 flex-col items-center gap-4 md:flex-row ${
-                  i >= currentSummary.length ? "hidden md:flex" : ""
-                }`}
-              >
-                <Reveal delay={(i % currentSummary.length) * 0.1} y={20} className="shrink-0">
-                  <motion.div
-                    whileHover={{ y: -6, scale: 1.05 }}
-                    className="flex w-52 flex-col items-center gap-3 rounded-2xl glass p-5 text-center shadow-soft transition-all hover:shadow-glow"
-                  >
-                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-brand text-primary-foreground shadow-glow">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div className="text-sm font-semibold">{s.t}</div>
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                      {String((i % currentSummary.length) + 1).padStart(2, "0")}
-                    </div>
-                  </motion.div>
-                </Reveal>
-                {i < tripleSummary.length - 1 && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: (i % currentSummary.length) * 0.1 + 0.2 }}
-                    className="hidden shrink-0 text-muted-foreground md:block"
-                  >
-                    <motion.div
-                      animate={{ x: [0, 6, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <ArrowRight className="h-5 w-5" />
-                    </motion.div>
-                  </motion.div>
-                )}
-              </div>
             );
           })}
         </div>
