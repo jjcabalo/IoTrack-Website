@@ -66,13 +66,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "IoTrack Learning Kit" },
+      { title: "IoTrack Home" },
       {
         name: "description",
         content:
           "An immersive learning experience that teaches IoT fundamentals through an interactive robotic arm demonstration.",
       },
-      { property: "og:title", content: "IoTrack Learning Kit" },
+      { property: "og:title", content: "IoTrack Home" },
       {
         property: "og:description",
         content: "Learn IoT fundamentals through an interactive robotic arm demonstration.",
